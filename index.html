@@ -15,16 +15,617 @@
     <link rel="stylesheet" href="https://alixb-accessible.github.io/faites-mieux-toolbar/faites-mieux.css">
     <script src="https://alixb-accessible.github.io/faites-mieux-toolbar/faites-mieux.js" defer></script>
     
-    <!-- Styles personnalisés -->
-    <link rel="stylesheet" href="style.css">
-    
     <!-- React & Babel -->
     <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
     <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
     <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    
+    <style>
+        /* 
+         * Traducteur Français/Créole Antillais
+         * Par Ti Racoon
+         * Pour une France Inclusive
+         */
+
+        /* Reset et base */
+        *, *::before, *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        *, *::before, *::after {
+            font-family: "Lexend", sans-serif !important;
+        }
+
+        body, html, input, textarea, button, select {
+            font-family: "Lexend", sans-serif !important;
+        }
+
+        /* Fond drapeau inclusif */
+        body {
+            background: linear-gradient(135deg,
+                #4a4a4a 0%, #4a4a4a 14.28%,
+                #22c55e 14.28%, #22c55e 28.56%,
+                #3b82f6 28.56%, #3b82f6 42.84%,
+                #ffffff 42.84%, #ffffff 57.12%,
+                #fbbf24 57.12%, #fbbf24 71.4%,
+                #dc2626 71.4%, #dc2626 85.68%,
+                #4a4a4a 85.68%, #4a4a4a 100%
+            );
+            min-height: 100vh;
+        }
+
+        *:focus-visible {
+            outline: 3px solid #ff9800 !important;
+            outline-offset: 4px !important;
+        }
+
+        .app-container {
+            min-height: 100vh;
+            padding: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .card {
+            background: white;
+            border-radius: 0.75rem;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            transition: all 0.3s ease;
+        }
+
+        .card-title {
+            font-size: 1.875rem;
+            font-weight: bold;
+            color: #2563eb;
+            text-align: center;
+            margin-bottom: 0.5rem;
+        }
+
+        .card-subtitle {
+            text-align: center;
+            margin-bottom: 0.5rem;
+            color: #4b5563;
+        }
+
+        .card-description {
+            text-align: center;
+            font-size: 0.875rem;
+            color: #6b7280;
+            margin-bottom: 1.5rem;
+        }
+
+        .translation-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        @media (min-width: 768px) {
+            .translation-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        .input-label {
+            display: block;
+            font-size: 0.875rem;
+            font-weight: 600;
+            color: #374151;
+            margin-bottom: 0.5rem;
+        }
+
+        .textarea-input,
+        .textarea-output {
+            width: 100%;
+            height: 8rem;
+            padding: 0.75rem;
+            border: 2px solid #bfdbfe;
+            border-radius: 0.5rem;
+            resize: none;
+            font-size: 1rem;
+            transition: border-color 0.2s;
+        }
+
+        .textarea-input:focus {
+            outline: none;
+            border-color: #60a5fa;
+        }
+
+        .textarea-output {
+            background-color: #f9fafb;
+            border-color: #e5e7eb;
+        }
+
+        .textarea-input:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        .btn {
+            padding: 0.5rem 1.5rem;
+            border-radius: 0.5rem;
+            font-weight: 600;
+            transition: all 0.2s;
+            cursor: pointer;
+            border: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 1rem;
+        }
+
+        .btn-primary {
+            background-color: #3b82f6;
+            color: white;
+        }
+
+        .btn-primary:hover:not(:disabled) {
+            background-color: #2563eb;
+        }
+
+        .btn-primary:disabled {
+            background-color: #d1d5db;
+            cursor: not-allowed;
+        }
+
+        .btn-secondary {
+            background-color: #e5e7eb;
+            color: #374151;
+        }
+
+        .btn-secondary:hover:not(:disabled) {
+            background-color: #d1d5db;
+        }
+
+        .btn-group {
+            display: flex;
+            gap: 0.75rem;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .error-message {
+            margin-bottom: 1rem;
+            padding: 0.75rem;
+            background-color: #fee2e2;
+            color: #991b1b;
+            border-radius: 0.5rem;
+            font-size: 0.875rem;
+        }
+
+        .expressions-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 0.75rem;
+        }
+
+        @media (min-width: 768px) {
+            .expressions-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        .expression-card {
+            padding: 0.75rem;
+            background: linear-gradient(to right, #eff6ff, #ecfdf5);
+            border: 1px solid #bfdbfe;
+            border-radius: 0.5rem;
+            text-align: left;
+            transition: all 0.2s;
+            cursor: pointer;
+        }
+
+        .expression-card:hover {
+            background: linear-gradient(to right, #dbeafe, #d1fae5);
+        }
+
+        .expression-fr {
+            font-weight: 600;
+            color: #1f2937;
+            margin-bottom: 0.25rem;
+        }
+
+        .expression-cr {
+            color: #2563eb;
+            font-size: 0.875rem;
+        }
+
+        .info-box {
+            background: linear-gradient(to right, #dbeafe, #d1fae5);
+            border-radius: 0.5rem;
+            padding: 1rem;
+            font-size: 0.875rem;
+        }
+
+        .info-title {
+            font-weight: bold;
+            color: #1f2937;
+            margin-bottom: 0.5rem;
+        }
+
+        .info-text {
+            color: #374151;
+            margin-bottom: 0.5rem;
+        }
+
+        .info-list {
+            color: #374151;
+            margin-left: 1rem;
+        }
+
+        .info-list li {
+            margin-bottom: 0.25rem;
+        }
+
+        .loader-container {
+            position: absolute;
+            inset: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: rgba(249, 250, 251, 0.75);
+        }
+
+        .spinner {
+            animation: spin 1s linear infinite;
+            color: #2563eb;
+        }
+
+        @keyframes spin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        .footer {
+            margin-top: 1.5rem;
+            text-align: center;
+            font-size: 0.875rem;
+            color: #4b5563;
+        }
+
+        .signature {
+            text-align: center;
+            margin-top: 2rem;
+            padding: 1rem;
+            font-size: 0.875rem;
+            color: #6b7280;
+            font-style: italic;
+        }
+
+        .signature strong {
+            color: #1f2937;
+            font-weight: 700;
+        }
+
+        .max-w-4xl {
+            max-width: 56rem;
+        }
+
+        .mx-auto {
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .pt-16 {
+            padding-top: 4rem;
+        }
+
+        .relative {
+            position: relative;
+        }
+
+        .text-center {
+            text-align: center;
+        }
+
+        .text-xs {
+            font-size: 0.75rem;
+        }
+
+        .text-sm {
+            font-size: 0.875rem;
+        }
+
+        .italic {
+            font-style: italic;
+        }
+
+        .font-semibold {
+            font-weight: 600;
+        }
+
+        .font-bold {
+            font-weight: 700;
+        }
+
+        .mb-2 {
+            margin-bottom: 0.5rem;
+        }
+
+        .mb-4 {
+            margin-bottom: 1rem;
+        }
+
+        .mt-3 {
+            margin-top: 0.75rem;
+        }
+
+        .flex {
+            display: flex;
+        }
+
+        .items-center {
+            align-items: center;
+        }
+
+        .gap-2 {
+            gap: 0.5rem;
+        }
+
+        .text-xl {
+            font-size: 1.25rem;
+        }
+    </style>
 </head>
 <body>
     <div id="root"></div>
-    <script type="text/babel" src="app.js"></script>
+
+    <script type="text/babel">
+        const { useState } = React;
+
+        const ArrowLeftRight = ({ size = 24 }) => (
+            React.createElement('svg', { width: size, height: size, viewBox: "0 0 24 24", fill: "none", stroke: "currentColor", strokeWidth: "2", strokeLinecap: "round", strokeLinejoin: "round" },
+                React.createElement('path', { d: "M8 3L4 7l4 4" }),
+                React.createElement('path', { d: "M4 7h16" }),
+                React.createElement('path', { d: "m16 21 4-4-4-4" }),
+                React.createElement('path', { d: "M20 17H4" })
+            )
+        );
+
+        const Book = ({ size = 24 }) => (
+            React.createElement('svg', { width: size, height: size, viewBox: "0 0 24 24", fill: "none", stroke: "currentColor", strokeWidth: "2", strokeLinecap: "round", strokeLinejoin: "round" },
+                React.createElement('path', { d: "M4 19.5A2.5 2.5 0 0 1 6.5 17H20" }),
+                React.createElement('path', { d: "M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z" })
+            )
+        );
+
+        const Loader2 = ({ size = 24 }) => (
+            React.createElement('svg', { width: size, height: size, viewBox: "0 0 24 24", fill: "none", stroke: "currentColor", strokeWidth: "2", strokeLinecap: "round", strokeLinejoin: "round", className: "spinner" },
+                React.createElement('path', { d: "M21 12a9 9 0 1 1-6.219-8.56" })
+            )
+        );
+
+        const CreoleTranslator = () => {
+            const [inputText, setInputText] = useState('');
+            const [outputText, setOutputText] = useState('');
+            const [direction, setDirection] = useState('fr-cr');
+            const [isLoading, setIsLoading] = useState(false);
+            const [error, setError] = useState('');
+
+            const expressions = [
+                { fr: 'Bonjour, comment vas-tu ?', cr: 'Bonjou, sa ou fè ?' },
+                { fr: 'Ça va ? Ça marche ?', cr: 'Sa ka maché ?' },
+                { fr: 'Donne-moi un petit punch !', cr: 'Ba mwen an ti ponch !' },
+                { fr: 'Où vas-tu ?', cr: 'Koté ou ka alé ?' },
+                { fr: 'Qu\'est-ce que c\'est ?', cr: 'Ka sa yé ?' },
+                { fr: 'Reste là, j\'arrive !', cr: 'Resté là an ka vini !' },
+                { fr: 'C\'est mauvais', cr: 'I pa bon' },
+                { fr: 'Allons-y !', cr: 'Annou ay !' },
+                { fr: 'Guide-moi', cr: 'Gidé mwen' },
+                { fr: 'C\'est très chaud', cr: 'Bagail la chô' },
+                { fr: 'Je n\'ai pas un sous', cr: 'An pa tini pwen lajan' },
+                { fr: 'Allons danser ce soir', cr: 'An nou zouké ô swé a' },
+                { fr: 'Tiens bon !', cr: 'Tiembè raid, pa moli !' },
+                { fr: 'J\'arrive !', cr: 'Man ka vini !' },
+                { fr: 'C\'est bon ! Ça suffit !', cr: 'I bon !' },
+                { fr: 'Je cherche un restaurant', cr: 'Man ka chèché an restoran' },
+                { fr: 'J\'ai faim', cr: 'Mwen fen' },
+                { fr: 'J\'ai soif', cr: 'Mwen swef' },
+                { fr: 'C\'était délicieux', cr: 'I té bon menm' },
+                { fr: 'L\'addition, s\'il vous plaît', cr: 'Konben man dwè\'w ?' },
+                { fr: 'Sans épice', cr: 'San zépis' },
+                { fr: 'C\'est combien ?', cr: 'Konben sa kouté ?' },
+                { fr: 'Trop cher', cr: 'Tro ché' },
+                { fr: 'Je ne fais que regarder', cr: 'Man ka gadé selman !' }
+            ];
+
+            const systemPrompt = direction === 'fr-cr' 
+                ? `Tu es un expert en créole antillais (Guadeloupe et Martinique). Ta tâche est de traduire du français vers le créole antillais de manière authentique et grammaticalement correcte.
+
+RÈGLES GRAMMATICALES IMPORTANTES :
+- Utilise la particule "ka" pour le présent progressif/habituel
+- Utilise "té" pour le passé
+- Utilise "kay" pour le futur
+- Les verbes sont invariables
+- Pronoms : mwen (je/moi), ou (tu/toi), i/li (il/elle), nou (nous), zòt (vous), yo (ils/elles)
+
+Traduis UNIQUEMENT la phrase donnée, sans explications. Réponds avec la traduction créole seulement.`
+                : `Tu es un expert en créole antillais. Traduis du créole vers le français de manière naturelle. Réponds avec la traduction française seulement.`;
+
+            const translateWithClaude = async (text) => {
+                setIsLoading(true);
+                setError('');
+                
+                try {
+                    const response = await fetch('https://api.anthropic.com/v1/messages', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({
+                            model: 'claude-sonnet-4-20250514',
+                            max_tokens: 1000,
+                            messages: [{
+                                role: 'user',
+                                content: `${systemPrompt}\n\nPhrase à traduire : "${text}"`
+                            }]
+                        })
+                    });
+
+                    if (!response.ok) {
+                        throw new Error('Erreur');
+                    }
+
+                    const data = await response.json();
+                    const translation = data.content
+                        .filter(item => item.type === 'text')
+                        .map(item => item.text)
+                        .join('')
+                        .trim();
+                    
+                    setOutputText(translation);
+                } catch (err) {
+                    setError('Erreur de traduction. Réessayez.');
+                } finally {
+                    setIsLoading(false);
+                }
+            };
+
+            const handleTranslate = () => {
+                if (!inputText.trim()) {
+                    setOutputText('');
+                    return;
+                }
+                translateWithClaude(inputText);
+            };
+
+            const handleKeyPress = (e) => {
+                if (e.key === 'Enter' && !e.shiftKey) {
+                    e.preventDefault();
+                    handleTranslate();
+                }
+            };
+
+            const switchDirection = () => {
+                setDirection(direction === 'fr-cr' ? 'cr-fr' : 'fr-cr');
+                setInputText(outputText);
+                setOutputText(inputText);
+            };
+
+            const useExpression = (expr) => {
+                if (direction === 'fr-cr') {
+                    setInputText(expr.fr);
+                    setOutputText(expr.cr);
+                } else {
+                    setInputText(expr.cr);
+                    setOutputText(expr.fr);
+                }
+            };
+
+            return React.createElement('div', { className: 'app-container' },
+                React.createElement('div', { className: 'max-w-4xl mx-auto pt-16' },
+                    React.createElement('div', { className: 'card' },
+                        React.createElement('h1', { className: 'card-title' }, 'Traducteur Français/Créole Antillais'),
+                        React.createElement('p', { className: 'card-subtitle' }, 'Guadeloupe & Martinique - Traduction intelligente avec IA'),
+                        React.createElement('p', { className: 'card-description' }, 'Respecte la structure grammaticale authentique du créole antillais'),
+                        
+                        React.createElement('div', { className: 'translation-grid' },
+                            React.createElement('div', null,
+                                React.createElement('label', { htmlFor: 'input-text', className: 'input-label' },
+                                    direction === 'fr-cr' ? 'Français' : 'Créole Antillais'
+                                ),
+                                React.createElement('textarea', {
+                                    id: 'input-text',
+                                    value: inputText,
+                                    onChange: (e) => setInputText(e.target.value),
+                                    onKeyPress: handleKeyPress,
+                                    placeholder: 'Entrez votre texte ici...',
+                                    className: 'textarea-input',
+                                    disabled: isLoading
+                                })
+                            ),
+                            React.createElement('div', null,
+                                React.createElement('label', { htmlFor: 'output-text', className: 'input-label' },
+                                    direction === 'fr-cr' ? 'Créole Antillais' : 'Français'
+                                ),
+                                React.createElement('div', { className: 'relative' },
+                                    React.createElement('textarea', {
+                                        id: 'output-text',
+                                        value: outputText,
+                                        readOnly: true,
+                                        placeholder: 'La traduction apparaîtra ici...',
+                                        className: 'textarea-output'
+                                    }),
+                                    isLoading && React.createElement('div', { className: 'loader-container' },
+                                        React.createElement(Loader2, { size: 32 })
+                                    )
+                                )
+                            )
+                        ),
+                        
+                        error && React.createElement('div', { className: 'error-message', role: 'alert' }, error),
+                        
+                        React.createElement('div', { className: 'btn-group' },
+                            React.createElement('button', {
+                                onClick: handleTranslate,
+                                disabled: isLoading || !inputText.trim(),
+                                className: 'btn btn-primary'
+                            },
+                                isLoading ? 'Traduction...' : 'Traduire'
+                            ),
+                            React.createElement('button', {
+                                onClick: switchDirection,
+                                disabled: isLoading,
+                                className: 'btn btn-secondary'
+                            },
+                                React.createElement(ArrowLeftRight, { size: 18 }),
+                                'Inverser'
+                            )
+                        ),
+                        
+                        React.createElement('p', { className: 'text-xs text-center mt-3' },
+                            'Astuce : Appuyez sur Entrée pour traduire rapidement'
+                        )
+                    ),
+                    
+                    React.createElement('div', { className: 'card' },
+                        React.createElement('h2', { className: 'text-xl font-bold mb-4 flex items-center gap-2' },
+                            React.createElement(Book, { size: 24 }),
+                            'Expressions courantes - Cliquez pour essayer'
+                        ),
+                        React.createElement('div', { className: 'expressions-grid' },
+                            expressions.map((expr, index) => 
+                                React.createElement('button', {
+                                    key: index,
+                                    onClick: () => useExpression(expr),
+                                    className: 'expression-card'
+                                },
+                                    React.createElement('div', { className: 'expression-fr' }, expr.fr),
+                                    React.createElement('div', { className: 'expression-cr' }, expr.cr)
+                                )
+                            )
+                        )
+                    ),
+                    
+                    React.createElement('div', { className: 'card info-box' },
+                        React.createElement('h3', { className: 'info-title' }, 'Comment ça marche ?'),
+                        React.createElement('p', { className: 'info-text' },
+                            'Cette application utilise l\'IA Claude pour respecter la vraie grammaire créole antillaise.'
+                        ),
+                        React.createElement('ul', { className: 'info-list' },
+                            React.createElement('li', null, 'Particule "ka" pour le présent'),
+                            React.createElement('li', null, 'Particule "té" pour le passé'),
+                            React.createElement('li', null, 'Particule "kay" pour le futur'),
+                            React.createElement('li', null, 'Structure authentique des phrases créoles')
+                        )
+                    ),
+                    
+                    React.createElement('div', { className: 'signature' },
+                        React.createElement('p', null, 
+                            'Créé avec ',
+                            React.createElement('strong', null, 'Par Ti Racoon'),
+                            ' - Pour une France Inclusive'
+                        )
+                    )
+                )
+            );
+        };
+
+        ReactDOM.render(React.createElement(CreoleTranslator), document.getElementById('root'));
+    </script>
 </body>
 </html>
