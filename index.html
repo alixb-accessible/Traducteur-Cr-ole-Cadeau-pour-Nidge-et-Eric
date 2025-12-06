@@ -3,46 +3,24 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Traducteur Français/Créole Antillais - Par Ti Racoon</title>
-    <meta name="description" content="Traducteur intelligent français-créole antillais avec IA. Accessible et respectueux de la grammaire créole guadeloupéenne et martiniquaise. Par Ti Racoon.">
+    <title>Initiation au Créole Antillais - Par Ti Racoon</title>
+    <meta name="description" content="Apprendre le créole antillais : traducteur IA, cours, quiz, devinettes, exercices. Par Ti Racoon.">
     
-    <!-- Lexend Font -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@300;400;500;700&display=swap" rel="stylesheet">
     
-    <!-- Toolbar d'accessibilité Faites Mieux -->
     <link rel="stylesheet" href="https://alixb-accessible.github.io/faites-mieux-toolbar/faites-mieux.css">
     <script src="https://alixb-accessible.github.io/faites-mieux-toolbar/faites-mieux.js" defer></script>
     
-    <!-- React & Babel -->
-    <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
-    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
-    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
-    
     <style>
-        /* 
-         * Traducteur Français/Créole Antillais
-         * Par Ti Racoon
-         * Pour une France Inclusive
-         */
-
-        /* Reset et base */
-        *, *::before, *::after {
+        * {
             box-sizing: border-box;
             margin: 0;
             padding: 0;
-        }
-
-        *, *::before, *::after {
             font-family: "Lexend", sans-serif !important;
         }
 
-        body, html, input, textarea, button, select {
-            font-family: "Lexend", sans-serif !important;
-        }
-
-        /* Fond drapeau inclusif */
         body {
             background: linear-gradient(135deg,
                 #4a4a4a 0%, #4a4a4a 14.28%,
@@ -54,6 +32,7 @@
                 #4a4a4a 85.68%, #4a4a4a 100%
             );
             min-height: 100vh;
+            padding: 1rem;
         }
 
         *:focus-visible {
@@ -61,40 +40,72 @@
             outline-offset: 4px !important;
         }
 
-        .app-container {
-            min-height: 100vh;
-            padding: 1rem;
-            transition: all 0.3s ease;
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
         }
 
-        .card {
+        .header {
             background: white;
-            border-radius: 0.75rem;
+            border-radius: 1rem;
+            padding: 2rem;
+            margin-bottom: 1.5rem;
+            text-align: center;
             box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
-            padding: 1.5rem;
-            margin-bottom: 1.5rem;
-            transition: all 0.3s ease;
         }
 
-        .card-title {
-            font-size: 1.875rem;
-            font-weight: bold;
+        .header h1 {
+            font-size: 2rem;
             color: #2563eb;
-            text-align: center;
             margin-bottom: 0.5rem;
         }
 
-        .card-subtitle {
-            text-align: center;
-            margin-bottom: 0.5rem;
-            color: #4b5563;
-        }
-
-        .card-description {
-            text-align: center;
-            font-size: 0.875rem;
-            color: #6b7280;
+        .tabs {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: 0.5rem;
             margin-bottom: 1.5rem;
+            background: white;
+            padding: 1rem;
+            border-radius: 1rem;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+        }
+
+        .tab-btn {
+            padding: 0.75rem 1rem;
+            border: none;
+            background: #e5e7eb;
+            color: #374151;
+            border-radius: 0.5rem;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.2s;
+            font-size: 0.9rem;
+        }
+
+        .tab-btn:hover {
+            background: #d1d5db;
+        }
+
+        .tab-btn.active {
+            background: #3b82f6;
+            color: white;
+        }
+
+        .content {
+            background: white;
+            border-radius: 1rem;
+            padding: 2rem;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+            min-height: 400px;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
         }
 
         .translation-grid {
@@ -110,16 +121,14 @@
             }
         }
 
-        .input-label {
-            display: block;
-            font-size: 0.875rem;
+        label {
             font-weight: 600;
-            color: #374151;
             margin-bottom: 0.5rem;
+            color: #374151;
+            display: block;
         }
 
-        .textarea-input,
-        .textarea-output {
+        textarea {
             width: 100%;
             height: 8rem;
             padding: 0.75rem;
@@ -127,58 +136,62 @@
             border-radius: 0.5rem;
             resize: none;
             font-size: 1rem;
-            transition: border-color 0.2s;
         }
 
-        .textarea-input:focus {
+        textarea:focus {
             outline: none;
-            border-color: #60a5fa;
+            border-color: #3b82f6;
         }
 
-        .textarea-output {
-            background-color: #f9fafb;
-            border-color: #e5e7eb;
-        }
-
-        .textarea-input:disabled {
-            opacity: 0.6;
-            cursor: not-allowed;
-        }
-
-        .btn {
-            padding: 0.5rem 1.5rem;
+        input[type="text"] {
+            width: 100%;
+            padding: 0.75rem;
+            border: 2px solid #bfdbfe;
             border-radius: 0.5rem;
-            font-weight: 600;
-            transition: all 0.2s;
-            cursor: pointer;
-            border: none;
-            display: inline-flex;
-            align-items: center;
-            gap: 0.5rem;
             font-size: 1rem;
         }
 
+        input[type="text"]:focus {
+            outline: none;
+            border-color: #3b82f6;
+        }
+
+        .btn {
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 0.5rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
         .btn-primary {
-            background-color: #3b82f6;
+            background: #3b82f6;
             color: white;
         }
 
         .btn-primary:hover:not(:disabled) {
-            background-color: #2563eb;
+            background: #2563eb;
         }
 
         .btn-primary:disabled {
-            background-color: #d1d5db;
+            background: #d1d5db;
             cursor: not-allowed;
         }
 
         .btn-secondary {
-            background-color: #e5e7eb;
+            background: #e5e7eb;
             color: #374151;
         }
 
-        .btn-secondary:hover:not(:disabled) {
-            background-color: #d1d5db;
+        .btn-success {
+            background: #22c55e;
+            color: white;
+        }
+
+        .btn-warning {
+            background: #f59e0b;
+            color: white;
         }
 
         .btn-group {
@@ -186,41 +199,28 @@
             gap: 0.75rem;
             justify-content: center;
             flex-wrap: wrap;
-        }
-
-        .error-message {
-            margin-bottom: 1rem;
-            padding: 0.75rem;
-            background-color: #fee2e2;
-            color: #991b1b;
-            border-radius: 0.5rem;
-            font-size: 0.875rem;
+            margin-top: 1rem;
         }
 
         .expressions-grid {
             display: grid;
-            grid-template-columns: 1fr;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
             gap: 0.75rem;
+            margin-top: 2rem;
         }
 
-        @media (min-width: 768px) {
-            .expressions-grid {
-                grid-template-columns: repeat(2, 1fr);
-            }
-        }
-
-        .expression-card {
+        .expression-card, .riddle-card {
             padding: 0.75rem;
             background: linear-gradient(to right, #eff6ff, #ecfdf5);
             border: 1px solid #bfdbfe;
             border-radius: 0.5rem;
-            text-align: left;
-            transition: all 0.2s;
             cursor: pointer;
+            transition: all 0.2s;
         }
 
-        .expression-card:hover {
+        .expression-card:hover, .riddle-card:hover {
             background: linear-gradient(to right, #dbeafe, #d1fae5);
+            transform: translateY(-2px);
         }
 
         .expression-fr {
@@ -234,398 +234,722 @@
             font-size: 0.875rem;
         }
 
-        .info-box {
-            background: linear-gradient(to right, #dbeafe, #d1fae5);
-            border-radius: 0.5rem;
+        .quiz-question, .exercise-box {
+            background: #f3f4f6;
+            padding: 1.5rem;
+            border-radius: 0.75rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .quiz-options {
+            display: grid;
+            gap: 0.75rem;
+            margin-top: 1rem;
+        }
+
+        .quiz-option, .word-button {
             padding: 1rem;
-            font-size: 0.875rem;
+            background: white;
+            border: 2px solid #e5e7eb;
+            border-radius: 0.5rem;
+            cursor: pointer;
+            transition: all 0.2s;
+            text-align: left;
         }
 
-        .info-title {
+        .quiz-option:hover:not(.answered), .word-button:hover:not(.used) {
+            border-color: #3b82f6;
+            background: #eff6ff;
+        }
+
+        .quiz-option.correct {
+            border-color: #22c55e;
+            background: #f0fdf4;
+        }
+
+        .quiz-option.incorrect {
+            border-color: #ef4444;
+            background: #fef2f2;
+        }
+
+        .word-button.used {
+            opacity: 0.3;
+            cursor: default;
+        }
+
+        .score-display {
+            text-align: center;
+            font-size: 1.5rem;
             font-weight: bold;
-            color: #1f2937;
-            margin-bottom: 0.5rem;
+            color: #2563eb;
+            margin: 2rem 0;
         }
 
-        .info-text {
-            color: #374151;
-            margin-bottom: 0.5rem;
-        }
-
-        .info-list {
-            color: #374151;
-            margin-left: 1rem;
-        }
-
-        .info-list li {
-            margin-bottom: 0.25rem;
-        }
-
-        .loader-container {
-            position: absolute;
-            inset: 0;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            background-color: rgba(249, 250, 251, 0.75);
-        }
-
-        .spinner {
-            animation: spin 1s linear infinite;
+        .section-title {
+            font-size: 1.5rem;
+            font-weight: bold;
+            margin-bottom: 1.5rem;
             color: #2563eb;
         }
 
-        @keyframes spin {
-            from { transform: rotate(0deg); }
-            to { transform: rotate(360deg); }
+        .lesson-section {
+            margin-bottom: 2rem;
         }
 
-        .footer {
-            margin-top: 1.5rem;
-            text-align: center;
-            font-size: 0.875rem;
-            color: #4b5563;
+        .lesson-section h3 {
+            color: #2563eb;
+            margin-bottom: 0.75rem;
+            font-size: 1.25rem;
         }
 
-        .signature {
-            text-align: center;
-            margin-top: 2rem;
+        .example-box {
+            background: #eff6ff;
             padding: 1rem;
-            font-size: 0.875rem;
-            color: #6b7280;
-            font-style: italic;
+            border-left: 4px solid #3b82f6;
+            border-radius: 0.5rem;
+            margin: 1rem 0;
+            line-height: 1.8;
         }
 
-        .signature strong {
-            color: #1f2937;
-            font-weight: 700;
-        }
-
-        .max-w-4xl {
-            max-width: 56rem;
-        }
-
-        .mx-auto {
-            margin-left: auto;
-            margin-right: auto;
-        }
-
-        .pt-16 {
-            padding-top: 4rem;
-        }
-
-        .relative {
-            position: relative;
-        }
-
-        .text-center {
-            text-align: center;
-        }
-
-        .text-xs {
-            font-size: 0.75rem;
-        }
-
-        .text-sm {
-            font-size: 0.875rem;
-        }
-
-        .italic {
-            font-style: italic;
-        }
-
-        .font-semibold {
-            font-weight: 600;
-        }
-
-        .font-bold {
-            font-weight: 700;
-        }
-
-        .mb-2 {
-            margin-bottom: 0.5rem;
-        }
-
-        .mb-4 {
+        .reference-card {
+            background: #f9fafb;
+            padding: 1.5rem;
+            border-radius: 0.75rem;
             margin-bottom: 1rem;
         }
 
-        .mt-3 {
-            margin-top: 0.75rem;
+        .reference-card a {
+            color: #3b82f6;
+            text-decoration: none;
+            font-weight: 600;
         }
 
-        .flex {
+        .footer {
+            text-align: center;
+            padding: 2rem;
+            color: #6b7280;
+            font-style: italic;
+            background: white;
+            border-radius: 1rem;
+            margin-top: 1.5rem;
+        }
+
+        .sentence-builder {
+            min-height: 60px;
+            border: 2px dashed #bfdbfe;
+            border-radius: 0.5rem;
+            padding: 1rem;
+            margin: 1rem 0;
             display: flex;
-        }
-
-        .items-center {
+            flex-wrap: wrap;
+            gap: 0.5rem;
             align-items: center;
         }
 
-        .gap-2 {
-            gap: 0.5rem;
+        .sentence-word {
+            padding: 0.5rem 1rem;
+            background: #3b82f6;
+            color: white;
+            border-radius: 0.5rem;
+            cursor: pointer;
         }
 
-        .text-xl {
-            font-size: 1.25rem;
+        .hidden {
+            display: none;
         }
     </style>
 </head>
 <body>
-    <div id="root"></div>
+    <div class="container">
+        <div class="header">
+            <h1>Initiation au Créole Antillais</h1>
+            <p>Guadeloupe & Martinique - Apprendre en s'amusant</p>
+        </div>
 
-    <script type="text/babel">
-        const { useState } = React;
+        <div class="tabs">
+            <button class="tab-btn active" data-tab="translator">Traducteur</button>
+            <button class="tab-btn" data-tab="lessons">Cours</button>
+            <button class="tab-btn" data-tab="quiz">Quiz</button>
+            <button class="tab-btn" data-tab="riddles">Devinettes</button>
+            <button class="tab-btn" data-tab="exercises">Exercices</button>
+            <button class="tab-btn" data-tab="references">Ressources</button>
+        </div>
 
-        const ArrowLeftRight = ({ size = 24 }) => (
-            React.createElement('svg', { width: size, height: size, viewBox: "0 0 24 24", fill: "none", stroke: "currentColor", strokeWidth: "2", strokeLinecap: "round", strokeLinejoin: "round" },
-                React.createElement('path', { d: "M8 3L4 7l4 4" }),
-                React.createElement('path', { d: "M4 7h16" }),
-                React.createElement('path', { d: "m16 21 4-4-4-4" }),
-                React.createElement('path', { d: "M20 17H4" })
-            )
-        );
+        <div class="content">
+            <!-- TRADUCTEUR -->
+            <div id="translator" class="tab-content active">
+                <h2 class="section-title">Traducteur Intelligent</h2>
+                <div class="translation-grid">
+                    <div>
+                        <label for="input-text" id="input-label">Français</label>
+                        <textarea id="input-text" placeholder="Entrez votre texte..."></textarea>
+                    </div>
+                    <div>
+                        <label for="output-text" id="output-label">Créole Antillais</label>
+                        <textarea id="output-text" placeholder="La traduction apparaîtra ici..." readonly></textarea>
+                    </div>
+                </div>
+                <div class="btn-group">
+                    <button class="btn btn-primary" id="translate-btn">Traduire</button>
+                    <button class="btn btn-secondary" id="switch-btn">Inverser</button>
+                </div>
+                <h3 style="font-size: 1.25rem; font-weight: bold; margin-top: 2rem; margin-bottom: 1rem;">Expressions courantes</h3>
+                <div class="expressions-grid" id="expressions-grid"></div>
+            </div>
 
-        const Book = ({ size = 24 }) => (
-            React.createElement('svg', { width: size, height: size, viewBox: "0 0 24 24", fill: "none", stroke: "currentColor", strokeWidth: "2", strokeLinecap: "round", strokeLinejoin: "round" },
-                React.createElement('path', { d: "M4 19.5A2.5 2.5 0 0 1 6.5 17H20" }),
-                React.createElement('path', { d: "M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z" })
-            )
-        );
+            <!-- COURS -->
+            <div id="lessons" class="tab-content">
+                <h2 class="section-title">Cours rapide</h2>
+                <div class="lesson-section">
+                    <h3>Les particules temporelles</h3>
+                    <p>Le créole utilise des particules avant le verbe pour indiquer le temps :</p>
+                    <div class="example-box">
+                        <strong>ka</strong> = présent habituel/progressif<br>
+                        Ex: "Man ka chèché" = Je cherche<br><br>
+                        <strong>té</strong> = passé<br>
+                        Ex: "Man té alé" = J'allais / Je suis allé<br><br>
+                        <strong>kay/ké</strong> = futur<br>
+                        Ex: "Man kay alé" = J'irai
+                    </div>
+                </div>
+                <div class="lesson-section">
+                    <h3>Le pluriel</h3>
+                    <p>On utilise "sé" avant le nom pour marquer le pluriel :</p>
+                    <div class="example-box">
+                        <strong>timoun</strong> = enfant<br>
+                        <strong>sé timoun</strong> = les enfants
+                    </div>
+                </div>
+                <div class="lesson-section">
+                    <h3>Les adjectifs</h3>
+                    <p>Les adjectifs se placent APRÈS le nom (sauf ti, vyé, gran) :</p>
+                    <div class="example-box">
+                        <strong>an kay bèl</strong> = une belle maison<br>
+                        Mais : <strong>an ti-moun</strong> = un enfant
+                    </div>
+                </div>
+            </div>
 
-        const Loader2 = ({ size = 24 }) => (
-            React.createElement('svg', { width: size, height: size, viewBox: "0 0 24 24", fill: "none", stroke: "currentColor", strokeWidth: "2", strokeLinecap: "round", strokeLinejoin: "round", className: "spinner" },
-                React.createElement('path', { d: "M21 12a9 9 0 1 1-6.219-8.56" })
-            )
-        );
+            <!-- QUIZ -->
+            <div id="quiz" class="tab-content">
+                <h2 class="section-title">Quiz - 8 questions aléatoires</h2>
+                <div id="quiz-container"></div>
+            </div>
 
-        const CreoleTranslator = () => {
-            const [inputText, setInputText] = useState('');
-            const [outputText, setOutputText] = useState('');
-            const [direction, setDirection] = useState('fr-cr');
-            const [isLoading, setIsLoading] = useState(false);
-            const [error, setError] = useState('');
+            <!-- DEVINETTES -->
+            <div id="riddles" class="tab-content">
+                <h2 class="section-title">Devinettes créoles</h2>
+                <p style="margin-bottom: 2rem; color: #6b7280;">Devinez le sens des expressions créoles imagées !</p>
+                <div id="riddles-container"></div>
+            </div>
 
-            const expressions = [
-                { fr: 'Bonjour, comment vas-tu ?', cr: 'Bonjou, sa ou fè ?' },
-                { fr: 'Ça va ? Ça marche ?', cr: 'Sa ka maché ?' },
-                { fr: 'Donne-moi un petit punch !', cr: 'Ba mwen an ti ponch !' },
-                { fr: 'Où vas-tu ?', cr: 'Koté ou ka alé ?' },
-                { fr: 'Qu\'est-ce que c\'est ?', cr: 'Ka sa yé ?' },
-                { fr: 'Reste là, j\'arrive !', cr: 'Resté là an ka vini !' },
-                { fr: 'C\'est mauvais', cr: 'I pa bon' },
-                { fr: 'Allons-y !', cr: 'Annou ay !' },
-                { fr: 'Guide-moi', cr: 'Gidé mwen' },
-                { fr: 'C\'est très chaud', cr: 'Bagail la chô' },
-                { fr: 'Je n\'ai pas un sous', cr: 'An pa tini pwen lajan' },
-                { fr: 'Allons danser ce soir', cr: 'An nou zouké ô swé a' },
-                { fr: 'Tiens bon !', cr: 'Tiembè raid, pa moli !' },
-                { fr: 'J\'arrive !', cr: 'Man ka vini !' },
-                { fr: 'C\'est bon ! Ça suffit !', cr: 'I bon !' },
-                { fr: 'Je cherche un restaurant', cr: 'Man ka chèché an restoran' },
-                { fr: 'J\'ai faim', cr: 'Mwen fen' },
-                { fr: 'J\'ai soif', cr: 'Mwen swef' },
-                { fr: 'C\'était délicieux', cr: 'I té bon menm' },
-                { fr: 'L\'addition, s\'il vous plaît', cr: 'Konben man dwè\'w ?' },
-                { fr: 'Sans épice', cr: 'San zépis' },
-                { fr: 'C\'est combien ?', cr: 'Konben sa kouté ?' },
-                { fr: 'Trop cher', cr: 'Tro ché' },
-                { fr: 'Je ne fais que regarder', cr: 'Man ka gadé selman !' }
-            ];
+            <!-- EXERCICES -->
+            <div id="exercises" class="tab-content">
+                <h2 class="section-title">Exercices interactifs</h2>
+                <div id="exercises-container"></div>
+            </div>
 
-            const systemPrompt = direction === 'fr-cr' 
-                ? `Tu es un expert en créole antillais (Guadeloupe et Martinique). Ta tâche est de traduire du français vers le créole antillais de manière authentique et grammaticalement correcte.
+            <!-- RESSOURCES -->
+            <div id="references" class="tab-content">
+                <h2 class="section-title">Ressources et Références</h2>
+                <div class="reference-card">
+                    <h4>Cours universitaire complet</h4>
+                    <p>
+                        <a href="http://creoles.free.fr/" target="_blank" rel="noopener noreferrer">
+                            Introduction à la langue et à la culture créoles des Petites Antilles
+                        </a>
+                    </p>
+                    <p style="font-size: 0.875rem; color: #6b7280; margin-top: 0.5rem;">
+                        Par Marie-Christine Hazaël-Massieux. Cours complet avec grammaire, textes, culture.
+                    </p>
+                </div>
+                <div class="reference-card">
+                    <h4>À propos</h4>
+                    <p style="color: #4b5563;">
+                        Application d'initiation au créole antillais utilisant l'IA Claude pour la traduction.
+                    </p>
+                    <p style="font-size: 0.875rem; color: #6b7280; margin-top: 0.5rem; font-style: italic;">
+                        Créé par Ti Racoon - Pour une France Inclusive
+                    </p>
+                </div>
+            </div>
+        </div>
 
-RÈGLES GRAMMATICALES IMPORTANTES :
-- Utilise la particule "ka" pour le présent progressif/habituel
-- Utilise "té" pour le passé
-- Utilise "kay" pour le futur
-- Les verbes sont invariables
-- Pronoms : mwen (je/moi), ou (tu/toi), i/li (il/elle), nou (nous), zòt (vous), yo (ils/elles)
+        <div class="footer">
+            <p><strong>Par Ti Racoon</strong> - Pour une France Inclusive<br>
+            Application accessible à tous avec la toolbar Faites Mieux</p>
+        </div>
+    </div>
 
-Traduis UNIQUEMENT la phrase donnée, sans explications. Réponds avec la traduction créole seulement.`
-                : `Tu es un expert en créole antillais. Traduis du créole vers le français de manière naturelle. Réponds avec la traduction française seulement.`;
+    <script>
+        // 100 QUESTIONS POUR LE QUIZ
+        const allQuestions = [
+            {q: 'Comment dit-on "Bonjour" ?', o: ['Bonswa', 'Bonjou', 'Salut', 'Orevwa'], c: 1},
+            {q: 'Que signifie "Sa ou fè" ?', o: ['Où vas-tu', 'Comment ça va', 'Qui es-tu', 'Que fais-tu'], c: 1},
+            {q: 'Particule du présent ?', o: ['té', 'kay', 'ka', 'pa'], c: 2},
+            {q: 'Comment dit-on "Merci beaucoup" ?', o: ['Mèsi', 'Mèsi anlo', 'Souplé', 'Pa ni pwoblèm'], c: 1},
+            {q: 'Que signifie "Man ka chèché" ?', o: ['Je cherche', 'Je mange', 'Je dors', 'Je parle'], c: 0},
+            {q: 'Particule du passé ?', o: ['ka', 'té', 'kay', 'pa'], c: 1},
+            {q: 'Comment dit-on "les enfants" ?', o: ['timoun', 'timoun-la', 'sé timoun', 'timoun-yo'], c: 2},
+            {q: 'Que signifie "I bon" ?', o: ['Il est grand', 'C\'est bon', 'Il vient', 'C\'est cher'], c: 1},
+            {q: 'Comment dit-on "Au revoir" ?', o: ['Bonjou', 'Mèsi', 'Orevwa', 'Souplé'], c: 2},
+            {q: 'Que signifie "Mwen fen" ?', o: ['J\'ai faim', 'J\'ai soif', 'Je pars', 'Je viens'], c: 0},
+            {q: 'Particule du futur ?', o: ['ka', 'té', 'kay', 'pa'], c: 2},
+            {q: 'Comment dit-on "Oui" ?', o: ['Wi', 'Non', 'Pa', 'Wa'], c: 0},
+            {q: 'Que signifie "Koté ou ka alé" ?', o: ['Qui es-tu', 'Où vas-tu', 'Comment vas-tu', 'Que fais-tu'], c: 1},
+            {q: 'Comment dit-on "S\'il te plaît" ?', o: ['Mèsi', 'Souplé', 'Padon', 'Orevwa'], c: 1},
+            {q: 'Que signifie "Konben sa kouté" ?', o: ['Qui est-ce', 'Où est-ce', 'C\'est combien', 'Comment'], c: 2},
+            {q: 'Le pluriel se marque avec :', o: ['yo', 'la', 'sé', 'ka'], c: 2},
+            {q: 'Comment dit-on "Je t\'aime" ?', o: ['Mwen enmen\'w', 'Mwen fen', 'Mwen bien', 'Mwen ka alé'], c: 0},
+            {q: 'Où se place l\'adjectif ?', o: ['Avant le nom', 'Après le nom', 'Les deux', 'Aucun'], c: 1},
+            {q: 'Que signifie "An nou alé" ?', o: ['Allons-y', 'Au revoir', 'Bonjour', 'Merci'], c: 0},
+            {q: 'Comment dit-on "Excusemoi" ?', o: ['Mèsi', 'Padon', 'Eskizé mwen', 'Souplé'], c: 2},
+            // 20 de plus
+            {q: 'Que signifie "Mwen swef" ?', o: ['J\'ai faim', 'J\'ai soif', 'Je suis fatigué', 'Je pars'], c: 1},
+            {q: 'Comment dit-on "Maison" ?', o: ['Kay', 'Fanm', 'Nonm', 'Timoun'], c: 0},
+            {q: 'Que signifie "Fanm" ?', o: ['Homme', 'Femme', 'Enfant', 'Maison'], c: 1},
+            {q: 'Comment dit-on "Homme" ?', o: ['Fanm', 'Nonm', 'Timoun', 'Kay'], c: 1},
+            {q: 'Que signifie "Ba mwen" ?', o: ['Donne-moi', 'Prends', 'Va', 'Viens'], c: 0},
+            {q: 'Comment dit-on "Eau" ?', o: ['Dlo', 'Pen', 'Diri', 'Manjé'], c: 0},
+            {q: 'Que signifie "Manjé" ?', o: ['Boire', 'Manger', 'Dormir', 'Parler'], c: 1},
+            {q: 'Comment dit-on "Pain" ?', o: ['Dlo', 'Pen', 'Diri', 'Vyann'], c: 1},
+            {q: 'Que signifie "Diri" ?', o: ['Riz', 'Pain', 'Eau', 'Viande'], c: 0},
+            {q: 'Comment dit-on "Grand" ?', o: ['Ti', 'Gwo', 'Bèl', 'Vyé'], c: 1},
+            // 30 de plus
+            {q: 'Que signifie "Ti" ?', o: ['Grand', 'Petit', 'Beau', 'Vieux'], c: 1},
+            {q: 'Comment dit-on "Beau" ?', o: ['Bèl', 'Lèd', 'Gwo', 'Ti'], c: 0},
+            {q: 'Que signifie "Vyé" ?', o: ['Jeune', 'Vieux', 'Nouveau', 'Ancien'], c: 1},
+            {q: 'Comment dit-on "Nouveau" ?', o: ['Vyé', 'Nèf', 'Jenn', 'Gran'], c: 1},
+            {q: 'Que signifie "Jenn" ?', o: ['Vieux', 'Jeune', 'Grand', 'Petit'], c: 1},
+            {q: 'Comment dit-on "Nuit" ?', o: ['Jou', 'Nwit', 'Maten', 'Aswè'], c: 1},
+            {q: 'Que signifie "Jou" ?', o: ['Nuit', 'Jour', 'Matin', 'Soir'], c: 1},
+            {q: 'Comment dit-on "Matin" ?', o: ['Nwit', 'Aswè', 'Maten', 'Midi'], c: 2},
+            {q: 'Que signifie "Aswè" ?', o: ['Matin', 'Midi', 'Soir', 'Nuit'], c: 2},
+            {q: 'Comment dit-on "Aujourd\'hui" ?', o: ['Yè', 'Jòdi', 'Dèmen', 'Lontan'], c: 1},
+            // 40 de plus
+            {q: 'Que signifie "Dèmen" ?', o: ['Hier', 'Aujourd\'hui', 'Demain', 'Maintenant'], c: 2},
+            {q: 'Comment dit-on "Hier" ?', o: ['Jòdi', 'Dèmen', 'Yè', 'Lontan'], c: 2},
+            {q: 'Que signifie "Lontan" ?', o: ['Bientôt', 'Longtemps', 'Maintenant', 'Jamais'], c: 1},
+            {q: 'Comment dit-on "Maintenant" ?', o: ['Lontan', 'Kounnyé-a', 'Aprézan', 'Dèmen'], c: 1},
+            {q: 'Que signifie "Vini" ?', o: ['Aller', 'Venir', 'Partir', 'Rester'], c: 1},
+            {q: 'Comment dit-on "Aller" ?', o: ['Vini', 'Alé', 'Rété', 'Pati'], c: 1},
+            {q: 'Que signifie "Rété" ?', o: ['Partir', 'Venir', 'Rester', 'Aller'], c: 2},
+            {q: 'Comment dit-on "Partir" ?', o: ['Vini', 'Alé', 'Rété', 'Pati'], c: 3},
+            {q: 'Que signifie "Palé" ?', o: ['Écouter', 'Parler', 'Voir', 'Entendre'], c: 1},
+            {q: 'Comment dit-on "Écouter" ?', o: ['Palé', 'Tann', 'Wè', 'Konprann'], c: 1},
+            // 50 de plus
+            {q: 'Que signifie "Wè" ?', o: ['Entendre', 'Voir', 'Parler', 'Comprendre'], c: 1},
+            {q: 'Comment dit-on "Comprendre" ?', o: ['Palé', 'Tann', 'Wè', 'Konprann'], c: 3},
+            {q: 'Que signifie "Sav" ?', o: ['Savoir', 'Pouvoir', 'Vouloir', 'Devoir'], c: 0},
+            {q: 'Comment dit-on "Pouvoir" ?', o: ['Sav', 'Pé', 'Lé', 'Dwèt'], c: 1},
+            {q: 'Que signifie "Lé" ?', o: ['Savoir', 'Pouvoir', 'Vouloir', 'Devoir'], c: 2},
+            {q: 'Comment dit-on "Devoir" ?', o: ['Sav', 'Pé', 'Lé', 'Dwèt'], c: 3},
+            {q: 'Que signifie "Bwè" ?', o: ['Manger', 'Boire', 'Dormir', 'Chanter'], c: 1},
+            {q: 'Comment dit-on "Dormir" ?', o: ['Bwè', 'Dòmi', 'Manjé', 'Chanté'], c: 1},
+            {q: 'Que signifie "Chanté" ?', o: ['Danser', 'Chanter', 'Jouer', 'Rire'], c: 1},
+            {q: 'Comment dit-on "Danser" ?', o: ['Chanté', 'Dansé', 'Jwé', 'Ri'], c: 1},
+            // 60 de plus
+            {q: 'Que signifie "Jwé" ?', o: ['Travailler', 'Jouer', 'Étudier', 'Dormir'], c: 1},
+            {q: 'Comment dit-on "Travailler" ?', o: ['Jwé', 'Travay', 'Étidyé', 'Dòmi'], c: 1},
+            {q: 'Que signifie "Kouri" ?', o: ['Marcher', 'Courir', 'Sauter', 'Voler'], c: 1},
+            {q: 'Comment dit-on "Marcher" ?', o: ['Kouri', 'Maché', 'Soté', 'Volé'], c: 1},
+            {q: 'Que signifie "Gadé" ?', o: ['Regarder', 'Écouter', 'Toucher', 'Sentir'], c: 0},
+            {q: 'Comment dit-on "Chercher" ?', o: ['Gadé', 'Chèché', 'Jwenn', 'Pwan'], c: 1},
+            {q: 'Que signifie "Jwenn" ?', o: ['Chercher', 'Trouver', 'Perdre', 'Donner'], c: 1},
+            {q: 'Comment dit-on "Prendre" ?', o: ['Donné', 'Pwan', 'Jwenn', 'Chèché'], c: 1},
+            {q: 'Que signifie "Bay" ?', o: ['Prendre', 'Donner', 'Garder', 'Perdre
+                                            <invoke name="artifacts">
+<parameter name="command">update</parameter>
+<parameter name="id">creole-ultimate</parameter>
+<parameter name="old_str">            {q: 'Que signifie "Bay" ?', o: ['Prendre', 'Donner', 'Garder', 'Perdre</parameter>
+<parameter name="new_str">            {q: 'Que signifie "Bay" ?', o: ['Prendre', 'Donner', 'Garder', 'Perdre'], c: 1},
+            {q: 'Comment dit-on "Garder" ?', o: ['Bay', 'Pwan', 'Gadé', 'Kité'], c: 2},
+            // 70 de plus
+            {q: 'Que signifie "Kité" ?', o: ['Garder', 'Prendre', 'Laisser', 'Donner'], c: 2},
+            {q: 'Comment dit-on "Aimer" ?', o: ['Rayi', 'Enmen', 'Vwè', 'Konnen'], c: 1},
+            {q: 'Que signifie "Rayi" ?', o: ['Aimer', 'Détester', 'Vouloir', 'Savoir'], c: 1},
+            {q: 'Comment dit-on "Chaud" ?', o: ['Frèt', 'Cho', 'Tyèd', 'Glase'], c: 1},
+            {q: 'Que signifie "Frèt" ?', o: ['Chaud', 'Froid', 'Tiède', 'Glacé'], c: 1},
+            {q: 'Comment dit-on "Rouge" ?', o: ['Vè', 'Ble', 'Rouj', 'Jòn'], c: 2},
+            {q: 'Que signifie "Vè" ?', o: ['Rouge', 'Bleu', 'Vert', 'Jaune'], c: 2},
+            {q: 'Comment dit-on "Bleu" ?', o: ['Vè', 'Ble', 'Rouj', 'Blan'], c: 1},
+            {q: 'Que signifie "Blan" ?', o: ['Noir', 'Blanc', 'Gris', 'Brun'], c: 1},
+            {q: 'Comment dit-on "Noir" ?', o: ['Blan', 'Nwè', 'Gri', 'Bren'], c: 1},
+            // 80 de plus
+            {q: 'Que signifie "Maten-an" ?', o: ['Le soir', 'Le matin', 'La nuit', 'L\'après-midi'], c: 1},
+            {q: 'Comment dit-on "Content" ?', o: ['Tris', 'Kontan', 'Fâché', 'Maléré'], c: 1},
+            {q: 'Que signifie "Tris" ?', o: ['Content', 'Triste', 'Fâché', 'Fatigué'], c: 1},
+            {q: 'Comment dit-on "Fatigué" ?', o: ['Kontan', 'Fâché', 'Las', 'Tris'], c: 2},
+            {q: 'Que signifie "Fâché" ?', o: ['Content', 'Fatigué', 'En colère', 'Triste'], c: 2},
+            {q: 'Comment dit-on "Malade" ?', o: ['Las', 'Malad', 'Bien', 'Kontan'], c: 1},
+            {q: 'Que signifie "Bien" ?', o: ['Mal', 'Bien', 'Malade', 'Fatigué'], c: 1},
+            {q: 'Comment dit-on "Fort" ?', o: ['Fèb', 'Fò', 'Las', 'Cho'], c: 1},
+            {q: 'Que signifie "Fèb" ?', o: ['Fort', 'Faible', 'Fatigué', 'Malade'], c: 1},
+            {q: 'Comment dit-on "Rapide" ?', o: ['Dousman', 'Vit', 'Las', 'Cho'], c: 1},
+            // 90 de plus
+            {q: 'Que signifie "Dousman" ?', o: ['Rapide', 'Doucement', 'Fort', 'Vite'], c: 1},
+            {q: 'Comment dit-on "Beaucoup" ?', o: ['Pé', 'Anpil', 'Twòp', 'Pon'], c: 1},
+            {q: 'Que signifie "Pé" ?', o: ['Beaucoup', 'Peu', 'Trop', 'Rien'], c: 1},
+            {q: 'Comment dit-on "Trop" ?', o: ['Pé', 'Anpil', 'Twòp', 'Pon'], c: 2},
+            {q: 'Que signifie "Pon" ?', o: ['Beaucoup', 'Peu', 'Trop', 'Pas/Point'], c: 3},
+            {q: 'Comment dit-on "Toujours" ?', o: ['Souvan', 'Toujou', 'Jamé', 'Parfwa'], c: 1},
+            {q: 'Que signifie "Souvan" ?', o: ['Toujours', 'Souvent', 'Jamais', 'Parfois'], c: 1},
+            {q: 'Comment dit-on "Jamais" ?', o: ['Toujou', 'Souvan', 'Jamé', 'Parfwa'], c: 2},
+            {q: 'Que signifie "Parfwa" ?', o: ['Toujours', 'Souvent', 'Jamais', 'Parfois'], c: 3},
+            {q: 'Comment dit-on "Avec" ?', o: ['San', 'Épi', 'Pou', 'Adan'], c: 1},
+            // 100!
+            {q: 'Que signifie "San" ?', o: ['Avec', 'Sans', 'Pour', 'Dans'], c: 1},
+            {q: 'Comment dit-on "Pour" ?', o: ['San', 'Épi', 'Pou', 'Adan'], c: 2},
+            {q: 'Que signifie "Adan" ?', o: ['Avec', 'Sans', 'Pour', 'Dans'], c: 3},
+            {q: 'Comment dit-on "Sur" ?', o: ['Anba', 'Asou', 'Adan', 'Dèyè'], c: 1},
+            {q: 'Que signifie "Anba" ?', o: ['Sur', 'Sous', 'Dans', 'Derrière'], c: 1},
+            {q: 'Comment dit-on "Devant" ?', o: ['Dèyè', 'Douvan', 'Anba', 'Asou'], c: 1},
+            {q: 'Que signifie "Dèyè" ?', o: ['Devant', 'Derrière', 'Sous', 'Sur'], c: 1},
+            {q: 'Comment dit-on "Ici" ?', o: ['La', 'Isit', 'Lwen', 'Bò'], c: 1},
+            {q: 'Que signifie "La" ?', o: ['Ici', 'Là', 'Loin', 'Près'], c: 1},
+            {q: 'Félicitations ! Vous connaissez maintenant 100 mots !', o: ['Mèsi anlo !', 'Wi !', 'Annou kontinyé !', 'Toutes !'], c: 3}
+        ];
+    const expressions = [
+        { fr: 'Bonjour, comment vas-tu ?', cr: 'Bonjou, sa ou fè ?' },
+        { fr: 'Ça va bien', cr: 'Sa ka maché' },
+        { fr: 'Merci beaucoup', cr: 'Mèsi anlo' },
+        { fr: 'S\'il te plaît', cr: 'Souplé' },
+        { fr: 'Au revoir', cr: 'Orevwa' },
+        { fr: 'Je t\'aime', cr: 'Mwen enmen\'w' },
+        { fr: 'Excuse-moi', cr: 'Eskizé mwen' },
+        { fr: 'Où vas-tu ?', cr: 'Koté ou ka alé ?' },
+        { fr: 'Je cherche un restaurant', cr: 'Man ka chèché an restoran' },
+        { fr: 'C\'est combien ?', cr: 'Konben sa kouté ?' },
+        { fr: 'J\'ai faim', cr: 'Mwen fen' },
+        { fr: 'J\'ai soif', cr: 'Mwen swef' },
+        { fr: 'C\'est délicieux', cr: 'I bon anlo' },
+        { fr: 'Allons-y !', cr: 'An nou alé' },
+        { fr: 'Bonne nuit', cr: 'Bon nwit' },
+        { fr: 'À bientôt', cr: 'A ta lè' }
+    ];
 
-            const translateWithClaude = async (text) => {
-                setIsLoading(true);
-                setError('');
-                
-                try {
-                    const response = await fetch('https://api.anthropic.com/v1/messages', {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                        },
-                        body: JSON.stringify({
-                            model: 'claude-sonnet-4-20250514',
-                            max_tokens: 1000,
-                            messages: [{
-                                role: 'user',
-                                content: `${systemPrompt}\n\nPhrase à traduire : "${text}"`
-                            }]
-                        })
-                    });
+    const riddles = [
+        { expr: 'Chapo fey', hint: 'Expression pour dire qu\'il pleut fort', answer: 'Il pleut des cordes', explain: 'Littéralement "chapeau de feuille" - car on se couvre la tête avec des feuilles quand il pleut fort !' },
+        { expr: 'Lapli ka tombé, sé pa lapli, sé pis bèf', hint: 'Quand il pleut vraiment très fort', answer: 'Il pleut des vaches', explain: 'Expression imagée pour dire qu\'il pleut énormément - encore plus fort que "chapo fey" !' },
+        { expr: 'Pòté chapò ba mwen', hint: 'Expression de respect', answer: 'Chapeau / Bravo', explain: 'Littéralement "porter un chapeau pour moi" - signe de grand respect et admiration' },
+        { expr: 'Bat briyé', hint: 'Être très intelligent', answer: 'Avoir l\'esprit vif', explain: 'Littéralement "battre brûlé" - avoir l\'esprit qui bat vite, être très éveillé' },
+        { expr: 'Chaché krab', hint: 'Chercher des ennuis', answer: 'Chercher la bagarre', explain: 'Littéralement "chercher des crabes" - aller chercher quelque chose de difficile et potentiellement dangereux' },
+        { expr: 'Manjé fwomaj', hint: 'Être embarrassé', answer: 'Être gêné', explain: 'Manger du fromage = sentiment de gêne, expression de malaise' },
+        { expr: 'Fè do won', hint: 'Faire la tête', answer: 'Bouder', explain: 'Littéralement "faire le dos rond" comme un chat fâché' },
+        { expr: 'Kò a kò', hint: 'Face à face', answer: 'En tête-à-tête', explain: 'Littéralement "corps à corps" - être ensemble en privé' },
+        { expr: 'Bay kou ba', hint: 'Donner un coup de main', answer: 'Aider', explain: 'Littéralement "donner un coup bas" mais signifie aider, donner un coup de main' },
+        { expr: 'Koupé tèt', hint: 'Prendre une décision rapide', answer: 'Trancher', explain: 'Littéralement "couper la tête" - prendre une décision claire et rapide' }
+    ];
 
-                    if (!response.ok) {
-                        throw new Error('Erreur');
-                    }
+    const exercises = [
+        {
+            type: 'fill',
+            question: 'Complétez avec la bonne particule : Man ___ manjé pen (Je mange du pain)',
+            options: ['ka', 'té', 'kay'],
+            correct: 0
+        },
+        {
+            type: 'fill',
+            question: 'Complétez : Man ___ alé (Je suis allé)',
+            options: ['ka', 'té', 'kay'],
+            correct: 1
+        },
+        {
+            type: 'fill',
+            question: 'Complétez : Man ___ alé dèmen (J\'irai demain)',
+            options: ['ka', 'té', 'kay'],
+            correct: 2
+        },
+        {
+            type: 'order',
+            question: 'Remettez les mots dans l\'ordre : "Je cherche un restaurant"',
+            words: ['Man', 'ka', 'chèché', 'an', 'restoran'],
+            correct: 'Man ka chèché an restoran'
+        },
+        {
+            type: 'order',
+            question: 'Remettez les mots dans l\'ordre : "Les enfants jouent"',
+            words: ['Sé', 'timoun', 'ka', 'jwé'],
+            correct: 'Sé timoun ka jwé'
+        },
+        {
+            type: 'fill',
+            question: 'Comment dit-on "les enfants" ?',
+            options: ['timoun', 'sé timoun', 'timoun-la'],
+            correct: 1
+        }
+    ];
 
-                    const data = await response.json();
-                    const translation = data.content
-                        .filter(item => item.type === 'text')
-                        .map(item => item.text)
-                        .join('')
-                        .trim();
-                    
-                    setOutputText(translation);
-                } catch (err) {
-                    setError('Erreur de traduction. Réessayez.');
-                } finally {
-                    setIsLoading(false);
-                }
-            };
+    let direction = 'fr-cr';
+    let currentQuizQuestions = [];
+    let currentQuestion = 0;
+    let quizScore = 0;
+    let quizAnswered = false;
+    let currentRiddle = 0;
+    let riddleRevealed = false;
+    let currentExercise = 0;
+    let sentenceWords = [];
 
-            const handleTranslate = () => {
-                if (!inputText.trim()) {
-                    setOutputText('');
-                    return;
-                }
-                translateWithClaude(inputText);
-            };
+    // NAVIGATION
+    document.querySelectorAll('.tab-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+            const tabName = btn.dataset.tab;
+            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
+            document.getElementById(tabName).classList.add('active');
+            
+            if (tabName === 'quiz') initQuiz();
+            if (tabName === 'riddles') renderRiddle();
+            if (tabName === 'exercises') renderExercise();
+        });
+    });
 
-            const handleKeyPress = (e) => {
-                if (e.key === 'Enter' && !e.shiftKey) {
-                    e.preventDefault();
-                    handleTranslate();
-                }
-            };
+    // TRADUCTEUR
+    const inputText = document.getElementById('input-text');
+    const outputText = document.getElementById('output-text');
+    const translateBtn = document.getElementById('translate-btn');
+    const switchBtn = document.getElementById('switch-btn');
 
-            const switchDirection = () => {
-                setDirection(direction === 'fr-cr' ? 'cr-fr' : 'fr-cr');
-                setInputText(outputText);
-                setOutputText(inputText);
-            };
+    translateBtn.addEventListener('click', async () => {
+        if (!inputText.value.trim()) return;
+        translateBtn.disabled = true;
+        translateBtn.textContent = 'Traduction...';
+        
+        const systemPrompt = direction === 'fr-cr' 
+            ? `Expert créole antillais. Traduis du français au créole. Règles : "ka" présent, "té" passé, "kay" futur. Pluriel "sé". Adjectifs après nom. Réponds UNIQUEMENT avec la traduction.`
+            : `Expert créole antillais. Traduis du créole au français. Réponds UNIQUEMENT avec la traduction.`;
 
-            const useExpression = (expr) => {
-                if (direction === 'fr-cr') {
-                    setInputText(expr.fr);
-                    setOutputText(expr.cr);
-                } else {
-                    setInputText(expr.cr);
-                    setOutputText(expr.fr);
-                }
-            };
+        try {
+            const response = await fetch('https://api.anthropic.com/v1/messages', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    model: 'claude-sonnet-4-20250514',
+                    max_tokens: 1000,
+                    messages: [{ role: 'user', content: `${systemPrompt}\n\n"${inputText.value}"` }]
+                })
+            });
+            const data = await response.json();
+            outputText.value = data.content.filter(i => i.type === 'text').map(i => i.text).join('').trim();
+        } catch {
+            outputText.value = 'Erreur. Réessayez.';
+        }
+        
+        translateBtn.disabled = false;
+        translateBtn.textContent = 'Traduire';
+    });
 
-            return React.createElement('div', { className: 'app-container' },
-                React.createElement('div', { className: 'max-w-4xl mx-auto pt-16' },
-                    React.createElement('div', { className: 'card' },
-                        React.createElement('h1', { className: 'card-title' }, 'Traducteur Français/Créole Antillais'),
-                        React.createElement('p', { className: 'card-subtitle' }, 'Guadeloupe & Martinique - Traduction intelligente avec IA'),
-                        React.createElement('p', { className: 'card-description' }, 'Respecte la structure grammaticale authentique du créole antillais'),
-                        
-                        React.createElement('div', { className: 'translation-grid' },
-                            React.createElement('div', null,
-                                React.createElement('label', { htmlFor: 'input-text', className: 'input-label' },
-                                    direction === 'fr-cr' ? 'Français' : 'Créole Antillais'
-                                ),
-                                React.createElement('textarea', {
-                                    id: 'input-text',
-                                    value: inputText,
-                                    onChange: (e) => setInputText(e.target.value),
-                                    onKeyPress: handleKeyPress,
-                                    placeholder: 'Entrez votre texte ici...',
-                                    className: 'textarea-input',
-                                    disabled: isLoading
-                                })
-                            ),
-                            React.createElement('div', null,
-                                React.createElement('label', { htmlFor: 'output-text', className: 'input-label' },
-                                    direction === 'fr-cr' ? 'Créole Antillais' : 'Français'
-                                ),
-                                React.createElement('div', { className: 'relative' },
-                                    React.createElement('textarea', {
-                                        id: 'output-text',
-                                        value: outputText,
-                                        readOnly: true,
-                                        placeholder: 'La traduction apparaîtra ici...',
-                                        className: 'textarea-output'
-                                    }),
-                                    isLoading && React.createElement('div', { className: 'loader-container' },
-                                        React.createElement(Loader2, { size: 32 })
-                                    )
-                                )
-                            )
-                        ),
-                        
-                        error && React.createElement('div', { className: 'error-message', role: 'alert' }, error),
-                        
-                        React.createElement('div', { className: 'btn-group' },
-                            React.createElement('button', {
-                                onClick: handleTranslate,
-                                disabled: isLoading || !inputText.trim(),
-                                className: 'btn btn-primary'
-                            },
-                                isLoading ? 'Traduction...' : 'Traduire'
-                            ),
-                            React.createElement('button', {
-                                onClick: switchDirection,
-                                disabled: isLoading,
-                                className: 'btn btn-secondary'
-                            },
-                                React.createElement(ArrowLeftRight, { size: 18 }),
-                                'Inverser'
-                            )
-                        ),
-                        
-                        React.createElement('p', { className: 'text-xs text-center mt-3' },
-                            'Astuce : Appuyez sur Entrée pour traduire rapidement'
-                        )
-                    ),
-                    
-                    React.createElement('div', { className: 'card' },
-                        React.createElement('h2', { className: 'text-xl font-bold mb-4 flex items-center gap-2' },
-                            React.createElement(Book, { size: 24 }),
-                            'Expressions courantes - Cliquez pour essayer'
-                        ),
-                        React.createElement('div', { className: 'expressions-grid' },
-                            expressions.map((expr, index) => 
-                                React.createElement('button', {
-                                    key: index,
-                                    onClick: () => useExpression(expr),
-                                    className: 'expression-card'
-                                },
-                                    React.createElement('div', { className: 'expression-fr' }, expr.fr),
-                                    React.createElement('div', { className: 'expression-cr' }, expr.cr)
-                                )
-                            )
-                        )
-                    ),
-                    
-                    React.createElement('div', { className: 'card info-box' },
-                        React.createElement('h3', { className: 'info-title' }, 'Comment ça marche ?'),
-                        React.createElement('p', { className: 'info-text' },
-                            'Cette application utilise l\'IA Claude pour respecter la vraie grammaire créole antillaise.'
-                        ),
-                        React.createElement('ul', { className: 'info-list' },
-                            React.createElement('li', null, 'Particule "ka" pour le présent'),
-                            React.createElement('li', null, 'Particule "té" pour le passé'),
-                            React.createElement('li', null, 'Particule "kay" pour le futur'),
-                            React.createElement('li', null, 'Structure authentique des phrases créoles')
-                        )
-                    ),
-                    
-                    React.createElement('div', { className: 'signature' },
-                        React.createElement('p', null, 
-                            'Créé avec ',
-                            React.createElement('strong', null, 'Par Ti Racoon'),
-                            ' - Pour une France Inclusive'
-                        )
-                    )
-                )
-            );
+    switchBtn.addEventListener('click', () => {
+        direction = direction === 'fr-cr' ? 'cr-fr' : 'fr-cr';
+        [inputText.value, outputText.value] = [outputText.value, inputText.value];
+        document.getElementById('input-label').textContent = direction === 'fr-cr' ? 'Français' : 'Créole Antillais';
+        document.getElementById('output-label').textContent = direction === 'fr-cr' ? 'Créole Antillais' : 'Français';
+    });
+
+    // EXPRESSIONS
+    const grid = document.getElementById('expressions-grid');
+    expressions.forEach(e => {
+        const card = document.createElement('div');
+        card.className = 'expression-card';
+        card.innerHTML = `<div class="expression-fr">${e.fr}</div><div class="expression-cr">${e.cr}</div>`;
+        card.onclick = () => {
+            inputText.value = direction === 'fr-cr' ? e.fr : e.cr;
+            outputText.value = direction === 'fr-cr' ? e.cr : e.fr;
         };
+        grid.appendChild(card);
+    });
 
-        ReactDOM.render(React.createElement(CreoleTranslator), document.getElementById('root'));
-    </script>
+    // QUIZ
+    function initQuiz() {
+        currentQuizQuestions = allQuestions.sort(() => Math.random() - 0.5).slice(0, 8);
+        currentQuestion = 0;
+        quizScore = 0;
+        quizAnswered = false;
+        renderQuiz();
+    }
+
+    function renderQuiz() {
+        const container = document.getElementById('quiz-container');
+        if (currentQuestion >= currentQuizQuestions.length) {
+            container.innerHTML = `
+                <div style="text-align: center; padding: 2rem;">
+                    <h3 style="font-size: 1.5rem; margin-bottom: 1rem;">Quiz terminé !</h3>
+                    <div class="score-display">Score : ${quizScore} / ${currentQuizQuestions.length}</div>
+                    <button class="btn btn-primary" onclick="initQuiz()">Nouveau Quiz</button>
+                </div>`;
+            return;
+        }
+
+        const q = currentQuizQuestions[currentQuestion];
+        container.innerHTML = `
+            <div class="quiz-question">
+                <h3>Question ${currentQuestion + 1}/${currentQuizQuestions.length}</h3>
+                <p style="font-size: 1.125rem; margin-top: 1rem;">${q.q}</p>
+                <div class="quiz-options" id="quiz-options"></div>
+            </div>
+            <div style="text-align: center; margin-top: 1rem; color: #6b7280;">Score : ${quizScore}</div>
+            <div class="btn-group ${quizAnswered ? '' : 'hidden'}" id="next-btn">
+                <button class="btn ${currentQuestion < currentQuizQuestions.length - 1 ? 'btn-primary' : 'btn-success'}" onclick="nextQuestion()">
+                    ${currentQuestion < currentQuizQuestions.length - 1 ? 'Suivante' : 'Résultat'}
+                </button>
+            </div>`;
+
+        document.getElementById('quiz-options').innerHTML = q.o.map((opt, i) => 
+            `<button class="quiz-option" onclick="answerQuiz(${i}, ${q.c})">${opt}</button>`
+        ).join('');
+    }
+
+    function answerQuiz(selected, correct) {
+        if (quizAnswered) return;
+        quizAnswered = true;
+        const opts = document.querySelectorAll('.quiz-option');
+        opts.forEach((o, i) => {
+            o.classList.add('answered');
+            if (i === correct) o.classList.add('correct');
+            else if (i === selected) o.classList.add('incorrect');
+        });
+        if (selected === correct) quizScore++;
+        document.getElementById('next-btn').classList.remove('hidden');
+    }
+
+    function nextQuestion() {
+        currentQuestion++;
+        quizAnswered = false;
+        renderQuiz();
+    }
+
+    // DEVINETTES
+    function renderRiddle() {
+        const container = document.getElementById('riddles-container');
+        if (currentRiddle >= riddles.length) {
+            container.innerHTML = `
+                <div style="text-align: center; padding: 2rem;">
+                    <h3 style="font-size: 1.5rem; margin-bottom: 1rem;">Toutes les devinettes terminées !</h3>
+                    <button class="btn btn-primary" onclick="currentRiddle=0; riddleRevealed=false; renderRiddle()">Recommencer</button>
+                </div>`;
+            return;
+        }
+
+        const r = riddles[currentRiddle];
+        container.innerHTML = `
+            <div class="riddle-card" style="max-width: 600px; margin: 0 auto; cursor: default;">
+                <h3 style="font-size: 1.5rem; color: #2563eb; margin-bottom: 1rem;">${r.expr}</h3>
+                <p style="color: #6b7280; margin-bottom: 1rem;"><strong>Indice :</strong> ${r.hint}</p>
+                <div id="riddle-answer" class="${riddleRevealed ? '' : 'hidden'}" style="background: #f0fdf4; padding: 1rem; border-radius: 0.5rem; margin-top: 1rem;">
+                    <p style="font-weight: bold; color: #22c55e; margin-bottom: 0.5rem;">Réponse : ${r.answer}</p>
+                    <p style="color: #4b5563;">${r.explain}</p>
+                </div>
+            </div>
+            <div class="btn-group" style="margin-top: 2rem;">
+                <button class="btn ${riddleRevealed ? 'btn-secondary' : 'btn-warning'}" onclick="riddleRevealed=true; renderRiddle()" ${riddleRevealed ? 'disabled' : ''}>
+                    ${riddleRevealed ? 'Réponse affichée' : 'Voir la réponse'}
+                </button>
+                ${riddleRevealed ? '<button class="btn btn-primary" onclick="currentRiddle++; riddleRevealed=false; renderRiddle()">Suivante</button>' : ''}
+            </div>`;
+    }
+
+    // EXERCICES
+    function renderExercise() {
+        const container = document.getElementById('exercises-container');
+        if (currentExercise >= exercises.length) {
+            container.innerHTML = `
+                <div style="text-align: center; padding: 2rem;">
+                    <h3 style="font-size: 1.5rem; margin-bottom: 1rem;">Tous les exercices terminés !</h3>
+                    <button class="btn btn-primary" onclick="currentExercise=0; renderExercise()">Recommencer</button>
+                </div>`;
+            return;
+        }
+
+        const ex = exercises[currentExercise];
+        
+        if (ex.type === 'fill') {
+            container.innerHTML = `
+                <div class="exercise-box">
+                    <h3 style="margin-bottom: 1rem;">${ex.question}</h3>
+                    <div class="quiz-options" id="ex-options"></div>
+                </div>
+                <div class="btn-group hidden" id="ex-next">
+                    <button class="btn btn-primary" onclick="currentExercise++; renderExercise()">Suivant</button>
+                </div>`;
+            
+            document.getElementById('ex-options').innerHTML = ex.options.map((opt, i) => 
+                `<button class="quiz-option" onclick="checkExercise(${i}, ${ex.correct})">${opt}</button>`
+            ).join('');
+        } else if (ex.type === 'order') {
+            sentenceWords = [];
+            container.innerHTML = `
+                <div class="exercise-box">
+                    <h3 style="margin-bottom: 1rem;">${ex.question}</h3>
+                    <div class="sentence-builder" id="sentence-builder"></div>
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(100px, 1fr)); gap: 0.5rem; margin-top: 1rem;" id="word-buttons"></div>
+                </div>
+                <div class="btn-group">
+                    <button class="btn btn-warning" onclick="checkSentence('${ex.correct}')">Vérifier</button>
+                    <button class="btn btn-secondary" onclick="resetSentence()">Réinitialiser</button>
+                </div>
+                <div id="sentence-result"></div>`;
+            
+            document.getElementById('word-buttons').innerHTML = ex.words.map((w, i) => 
+                `<button class="word-button" onclick="addWord('${w}', ${i})">${w}</button>`
+            ).join('');
+        }
+    }
+
+    function checkExercise(selected, correct) {
+        const opts = document.querySelectorAll('.quiz-option');
+        opts.forEach((o, i) => {
+            o.classList.add('answered');
+            if (i === correct) o.classList.add('correct');
+            else if (i === selected) o.classList.add('incorrect');
+        });
+        document.getElementById('ex-next').classList.remove('hidden');
+    }
+
+    function addWord(word, index) {
+        const btn = document.querySelectorAll('.word-button')[index];
+        if (btn.classList.contains('used')) return;
+        btn.classList.add('used');
+        sentenceWords.push(word);
+        updateSentence();
+    }
+
+    function updateSentence() {
+        document.getElementById('sentence-builder').innerHTML = sentenceWords.map((w, i) => 
+            `<span class="sentence-word" onclick="removeWord(${i})">${w}</span>`
+        ).join('') || '<span style="color: #9ca3af;">Cliquez sur les mots ci-dessous...</span>';
+    }
+
+    function removeWord(index) {
+        const word = sentenceWords[index];
+        sentenceWords.splice(index, 1);
+        updateSentence();
+        document.querySelectorAll('.word-button').forEach(btn => {
+            if (btn.textContent === word && btn.classList.contains('used')) {
+                btn.classList.remove('used');
+            }
+        });
+    }
+
+    function resetSentence() {
+        sentenceWords = [];
+        document.querySelectorAll('.word-button').forEach(btn => btn.classList.remove('used'));
+        updateSentence();
+        document.getElementById('sentence-result').innerHTML = '';
+    }
+
+    function checkSentence(correct) {
+        const answer = sentenceWords.join(' ');
+        const result = document.getElementById('sentence-result');
+        if (answer === correct) {
+            result.innerHTML = '<div style="background: #f0fdf4; color: #22c55e; padding: 1rem; border-radius: 0.5rem; margin-top: 1rem; font-weight: bold;">Bravo ! C\'est correct !</div><div class="btn-group" style="margin-top: 1rem;"><button class="btn btn-primary" onclick="currentExercise++; renderExercise()">Suivant</button></div>';
+        } else {
+            result.innerHTML = `<div style="background: #fef2f2; color: #ef4444; padding: 1rem; border-radius: 0.5rem; margin-top: 1rem;"><strong>Pas tout à fait...</strong><br>Réponse attendue : ${correct}</div>`;
+        }
+    }
+
+    // Init
+    initQuiz();
+</script>
 </body>
-</html>
+</html></parameter>
