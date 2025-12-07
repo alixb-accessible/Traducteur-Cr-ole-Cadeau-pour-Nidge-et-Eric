@@ -35,46 +35,56 @@
         </nav>
 
         <main class="content">
-            <!-- TRADUCTEUR -->
-            <section id="translator" class="tab-content active" role="tabpanel" aria-labelledby="tab-translator">
-                <h2 class="section-title">Traducteur Français - Créole</h2>
-                <p class="description">Traduction automatique par intelligence artificielle (limite : 500 caractères)</p>
-                
-                <div class="translation-grid">
-                    <div class="translation-input-group">
-                        <label for="input-text" id="input-label">Français</label>
-                        <textarea 
-                            id="input-text" 
-                            placeholder="Entrez votre texte..." 
-                            maxlength="500"
-                            aria-describedby="input-help"
-                        ></textarea>
-                        <span id="input-help" class="sr-only">Zone de texte pour entrer le texte à traduire</span>
-                    </div>
-                    <div class="translation-output-group">
-                        <label for="output-text" id="output-label">Créole Antillais</label>
-                        <textarea 
-                            id="output-text" 
-                            placeholder="La traduction apparaîtra ici..." 
-                            readonly
-                            aria-describedby="output-help"
-                        ></textarea>
-                        <span id="output-help" class="sr-only">Zone de texte affichant la traduction</span>
-                    </div>
-                </div>
-                
-                <div class="btn-group">
-                    <button class="btn btn-primary" id="translate-btn">Traduire</button>
-                    <button class="btn btn-secondary" id="switch-btn">Inverser les langues</button>
-                </div>
-                
-                <p class="hint-text">
-                    Astuce : Cliquez sur les expressions ci-dessous pour les voir traduites.
-                </p>
-                
-                <h3 class="subsection-title">Expressions courantes</h3>
-                <div class="expressions-grid" id="expressions-grid" role="list" aria-label="Liste des expressions courantes"></div>
-            </section>
+           <!-- TRADUCTEUR -->
+<section id="translator" class="tab-content active" role="tabpanel" aria-labelledby="tab-translator">
+    <h2 class="section-title">Traducteur Français - Créole</h2>
+    
+    <!-- Message d'information sur les limites -->
+    <div class="result-info" style="margin-bottom: 1.5rem;">
+        <strong>À propos de ce traducteur :</strong><br>
+        Ce traducteur utilise un dictionnaire de mots et d'expressions courantes. Pour des traductions plus complexes ou nuancées, vous pouvez utiliser Claude (claude.ai) avec ce prompt :<br>
+        <code style="display: block; background: #f3f4f6; padding: 0.5rem; border-radius: 0.25rem; margin-top: 0.5rem; font-size: 0.875rem;">
+            "Traduis ce texte en créole antillais (Guadeloupe/Martinique) : [votre texte]"
+        </code>
+    </div>
+    
+    <p class="description">Traduction automatique par dictionnaire enrichi (limite : 500 caractères)</p>
+    
+    <div class="translation-grid">
+        <div class="translation-input-group">
+            <label for="input-text" id="input-label">Français</label>
+            <textarea 
+                id="input-text" 
+                placeholder="Entrez votre texte..." 
+                maxlength="500"
+                aria-describedby="input-help"
+            ></textarea>
+            <span id="input-help" class="sr-only">Zone de texte pour entrer le texte à traduire</span>
+        </div>
+        <div class="translation-output-group">
+            <label for="output-text" id="output-label">Créole Antillais</label>
+            <textarea 
+                id="output-text" 
+                placeholder="La traduction apparaîtra ici..." 
+                readonly
+                aria-describedby="output-help"
+            ></textarea>
+            <span id="output-help" class="sr-only">Zone de texte affichant la traduction</span>
+        </div>
+    </div>
+    
+    <div class="btn-group">
+        <button class="btn btn-primary" id="translate-btn">Traduire</button>
+        <button class="btn btn-secondary" id="switch-btn">Inverser les langues</button>
+    </div>
+    
+    <p class="hint-text">
+        Astuce : Cliquez sur les expressions ci-dessous pour les voir traduites.
+    </p>
+    
+    <h3 class="subsection-title">Expressions courantes</h3>
+    <div class="expressions-grid" id="expressions-grid" role="list" aria-label="Liste des expressions courantes"></div>
+</section>
 
             <!-- PHRASES PAR THÈME -->
             <section id="phrases" class="tab-content" role="tabpanel" aria-labelledby="tab-phrases">
