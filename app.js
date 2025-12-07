@@ -65,44 +65,102 @@ function initTabs() {
 }
 
 // ========================================
-// TRADUCTEUR AVEC API CLAUDE
+// MOTEUR DE TRADUCTION INTELLIGENT
 // ========================================
-async function translateWithClaude(text, fromLang, toLang) {
-    try {
-        const prompt = fromLang === 'fr' 
-            ? `Traduis ce texte français en créole antillais (Guadeloupe/Martinique). Donne uniquement la traduction, sans explication : "${text}"`
-            : `Traduis ce texte créole antillais en français. Donne uniquement la traduction, sans explication : "${text}"`;
-        
-        const response = await fetch("https://api.anthropic.com/v1/messages", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify({
-                model: "claude-sonnet-4-20250514",
-                max_tokens: 1000,
-                messages: [
-                    { role: "user", content: prompt }
-                ],
-            })
-        });
-
-        if (!response.ok) {
-            throw new Error('Erreur de traduction');
-        }
-
-        const data = await response.json();
-        
-        // Extraire le texte de la réponse
-        if (data.content && data.content.length > 0) {
-            return data.content[0].text;
-        } else {
-            throw new Error('Réponse vide');
-        }
-    } catch (error) {
-        console.error('Erreur de traduction:', error);
-        throw error;
+function intelligentTranslate(text, fromLang) {
+    text = text.trim();
+    
+    if (fromLang === 'fr') {
+        return frenchToCreole(text);
+    } else {
+        return creoleToFrench(text);
     }
+}
+
+function frenchToCreole(text) {
+    const lowerText = text.toLowerCase();
+    
+    // 1. Chercher dans les expressions exactes
+    for (let expr of expressions) {
+        if (expr.fr.toLowerCase() === lowerText) {
+            return expr.cr;
+        }
+    }
+    
+    // 2. Chercher dans les phrases par thème
+    for (let theme in phrasesByTheme) {
+        for (let phrase of phrasesByTheme[theme]) {
+            if (phrase.fr.toLowerCase() === lowerText) {
+                return phrase.cr;
+            }
+        }
+    }
+    
+    // 3. Traduction mot à mot avec le dictionnaire
+    let words = text.split(' ');
+    let translatedWords = [];
+    
+    for (let word of words) {
+        let cleanWord = word.toLowerCase().replace(/[.,!?;:]/g, '');
+        let found = false;
+        
+        for (let entry of dictionary) {
+            if (entry.fr.toLowerCase() === cleanWord) {
+                translatedWords.push(entry.cr);
+                found = true;
+                break;
+            }
+        }
+        
+        if (!found) {
+            translatedWords.push(word);
+        }
+    }
+    
+    return translatedWords.join(' ');
+}
+
+function creoleToFrench(text) {
+    const lowerText = text.toLowerCase();
+    
+    // 1. Chercher dans les expressions exactes
+    for (let expr of expressions) {
+        if (expr.cr.toLowerCase() === lowerText) {
+            return expr.fr;
+        }
+    }
+    
+    // 2. Chercher dans les phrases par thème
+    for (let theme in phrasesByTheme) {
+        for (let phrase of phrasesByTheme[theme]) {
+            if (phrase.cr.toLowerCase() === lowerText) {
+                return phrase.fr;
+            }
+        }
+    }
+    
+    // 3. Traduction mot à mot avec le dictionnaire
+    let words = text.split(' ');
+    let translatedWords = [];
+    
+    for (let word of words) {
+        let cleanWord = word.toLowerCase().replace(/[.,!?;:]/g, '');
+        let found = false;
+        
+        for (let entry of dictionary) {
+            if (entry.cr.toLowerCase() === cleanWord) {
+                translatedWords.push(entry.fr);
+                found = true;
+                break;
+            }
+        }
+        
+        if (!found) {
+            translatedWords.push(word);
+        }
+    }
+    
+    return translatedWords.join(' ');
 }
 
 function initTranslator() {
@@ -114,7 +172,7 @@ function initTranslator() {
     const outputLabel = document.getElementById('output-label');
 
     // Bouton de traduction
-    translateBtn.addEventListener('click', async () => {
+    translateBtn.addEventListener('click', () => {
         const text = inputText.value.trim();
         
         if (!text) {
@@ -127,20 +185,21 @@ function initTranslator() {
         translateBtn.textContent = 'Traduction en cours...';
         outputText.value = 'Traduction en cours...';
         
-        try {
-            const fromLang = direction === 'fr-cr' ? 'fr' : 'cr';
-            const toLang = direction === 'fr-cr' ? 'cr' : 'fr';
-            
-            const translation = await translateWithClaude(text, fromLang, toLang);
-            outputText.value = translation;
-        } catch (error) {
-            outputText.value = 'Erreur lors de la traduction. Veuillez réessayer.';
-            console.error('Erreur:', error);
-        } finally {
-            // Réactiver le bouton
-            translateBtn.disabled = false;
-            translateBtn.textContent = 'Traduire';
-        }
+        // Simuler un délai pour l'UX
+        setTimeout(() => {
+            try {
+                const fromLang = direction === 'fr-cr' ? 'fr' : 'cr';
+                const translation = intelligentTranslate(text, fromLang);
+                outputText.value = translation;
+            } catch (error) {
+                outputText.value = 'Erreur lors de la traduction. Veuillez réessayer.';
+                console.error('Erreur:', error);
+            } finally {
+                // Réactiver le bouton
+                translateBtn.disabled = false;
+                translateBtn.textContent = 'Traduire';
+            }
+        }, 300);
     });
 
     // Bouton pour inverser les langues
@@ -576,6 +635,9 @@ function renderOrderExercise(ex) {
     const container = document.getElementById('exercises-container');
     sentenceWords = [];
     
+    // MÉLANGER LES MOTS ALÉATOIREMENT
+    const shuffledWords = [...ex.words].sort(() => Math.random() - 0.5);
+    
     container.innerHTML = `
         <div style="text-align: center; margin-bottom: 1rem;">
             <span class="progress-badge">
@@ -598,7 +660,7 @@ function renderOrderExercise(ex) {
     `;
     
     const wordsContainer = document.getElementById('word-buttons');
-    ex.words.forEach((word, i) => {
+    shuffledWords.forEach((word, i) => {
         const button = document.createElement('button');
         button.className = 'word-button';
         button.textContent = word;
