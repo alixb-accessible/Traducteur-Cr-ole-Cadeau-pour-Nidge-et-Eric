@@ -1,9 +1,9 @@
-// app.js - Logique principale de l'application
+// app.js - Logique principale de l'application (VERSION AMÉLIORÉE)
 
 // ========================================
 // VARIABLES GLOBALES
 // ========================================
-let direction = 'fr-cr'; // Direction de traduction
+let direction = 'fr-cr';
 let currentQuizQuestions = [];
 let currentQuestion = 0;
 let quizScore = 0;
@@ -24,7 +24,6 @@ function initTabs() {
         btn.addEventListener('click', () => {
             const tabName = btn.dataset.tab;
             
-            // Mise à jour de l'état actif des boutons
             tabButtons.forEach(b => {
                 b.classList.remove('active');
                 b.setAttribute('aria-selected', 'false');
@@ -32,7 +31,6 @@ function initTabs() {
             btn.classList.add('active');
             btn.setAttribute('aria-selected', 'true');
             
-            // Mise à jour de l'affichage des contenus
             document.querySelectorAll('.tab-content').forEach(content => {
                 content.classList.remove('active');
             });
@@ -42,7 +40,6 @@ function initTabs() {
                 activeContent.classList.add('active');
             }
             
-            // Initialisation spécifique selon l'onglet
             switch(tabName) {
                 case 'quiz':
                     initQuiz();
@@ -65,7 +62,7 @@ function initTabs() {
 }
 
 // ========================================
-// MOTEUR DE TRADUCTION INTELLIGENT
+// MOTEUR DE TRADUCTION INTELLIGENT (AMÉLIORÉ)
 // ========================================
 function intelligentTranslate(text, fromLang) {
     text = text.trim();
@@ -78,9 +75,10 @@ function intelligentTranslate(text, fromLang) {
 }
 
 function frenchToCreole(text) {
-    const lowerText = text.toLowerCase();
+    let result = text;
     
-    // 1. Chercher dans les expressions exactes
+    // 1. Chercher dans les expressions exactes d'abord
+    const lowerText = text.toLowerCase();
     for (let expr of expressions) {
         if (expr.fr.toLowerCase() === lowerText) {
             return expr.cr;
@@ -96,19 +94,49 @@ function frenchToCreole(text) {
         }
     }
     
-    // 3. Traduction mot à mot avec le dictionnaire
-    let words = text.split(' ');
+    // 3. Traduction intelligente mot par mot
+    // D'abord, gérer les possessifs français
+    result = result.replace(/\bmon\b/gi, 'POSSESSIF_MWEN');
+    result = result.replace(/\bma\b/gi, 'POSSESSIF_MWEN');
+    result = result.replace(/\bmes\b/gi, 'POSSESSIF_MWEN');
+    result = result.replace(/\bton\b/gi, 'POSSESSIF_OU');
+    result = result.replace(/\bta\b/gi, 'POSSESSIF_OU');
+    result = result.replace(/\btes\b/gi, 'POSSESSIF_OU');
+    result = result.replace(/\bson\b/gi, 'POSSESSIF_LI');
+    result = result.replace(/\bsa\b/gi, 'POSSESSIF_LI');
+    result = result.replace(/\bses\b/gi, 'POSSESSIF_LI');
+    result = result.replace(/\bnotre\b/gi, 'POSSESSIF_NOU');
+    result = result.replace(/\bnos\b/gi, 'POSSESSIF_NOU');
+    result = result.replace(/\bvotre\b/gi, 'POSSESSIF_ZOT');
+    result = result.replace(/\bvos\b/gi, 'POSSESSIF_ZOT');
+    result = result.replace(/\bleur\b/gi, 'POSSESSIF_YO');
+    result = result.replace(/\bleurs\b/gi, 'POSSESSIF_YO');
+    
+    // Séparer en mots
+    let words = result.split(/\s+/);
     let translatedWords = [];
     
-    for (let word of words) {
-        let cleanWord = word.toLowerCase().replace(/[.,!?;:]/g, '');
+    for (let i = 0; i < words.length; i++) {
+        let word = words[i];
+        let cleanWord = word.toLowerCase().replace(/[.,!?;:']/g, '');
+        let punctuation = word.match(/[.,!?;:']$/)?.[0] || '';
         let found = false;
         
-        for (let entry of dictionary) {
-            if (entry.fr.toLowerCase() === cleanWord) {
-                translatedWords.push(entry.cr);
-                found = true;
-                break;
+        // Gérer les possessifs
+        if (cleanWord.startsWith('possessif_')) {
+            let possessive = cleanWord.replace('possessif_', '');
+            // Le possessif va APRÈS le nom en créole
+            translatedWords.push('___POSSESSIF___' + possessive);
+            found = true;
+        }
+        // Chercher dans le dictionnaire
+        else {
+            for (let entry of dictionary) {
+                if (entry.fr.toLowerCase() === cleanWord) {
+                    translatedWords.push(entry.cr.toLowerCase() + punctuation);
+                    found = true;
+                    break;
+                }
             }
         }
         
@@ -117,13 +145,38 @@ function frenchToCreole(text) {
         }
     }
     
-    return translatedWords.join(' ');
+    // Réorganiser : mettre les possessifs APRÈS les noms
+    let finalWords = [];
+    for (let i = 0; i < translatedWords.length; i++) {
+        if (translatedWords[i].startsWith('___POSSESSIF___')) {
+            // Le possessif vient APRÈS, donc on l'ajoute après le mot suivant
+            if (i + 1 < translatedWords.length) {
+                let nextWord = translatedWords[i + 1];
+                let possessive = translatedWords[i].replace('___POSSESSIF___', '');
+                finalWords.push(nextWord);
+                finalWords.push(possessive);
+                i++; // Sauter le mot suivant car on l'a déjà traité
+            }
+        } else {
+            finalWords.push(translatedWords[i]);
+        }
+    }
+    
+    result = finalWords.join(' ');
+    
+    // Mettre la première lettre en majuscule seulement
+    if (result.length > 0) {
+        result = result.charAt(0).toUpperCase() + result.slice(1).toLowerCase();
+    }
+    
+    return result;
 }
 
 function creoleToFrench(text) {
-    const lowerText = text.toLowerCase();
+    let result = text;
     
     // 1. Chercher dans les expressions exactes
+    const lowerText = text.toLowerCase();
     for (let expr of expressions) {
         if (expr.cr.toLowerCase() === lowerText) {
             return expr.fr;
@@ -140,27 +193,35 @@ function creoleToFrench(text) {
     }
     
     // 3. Traduction mot à mot avec le dictionnaire
-    let words = text.split(' ');
+    let words = result.split(/\s+/);
     let translatedWords = [];
     
     for (let word of words) {
-        let cleanWord = word.toLowerCase().replace(/[.,!?;:]/g, '');
+        let cleanWord = word.toLowerCase().replace(/[.,!?;:']/g, '');
+        let punctuation = word.match(/[.,!?;:']$/)?.[0] || '';
         let found = false;
         
         for (let entry of dictionary) {
             if (entry.cr.toLowerCase() === cleanWord) {
-                translatedWords.push(entry.fr);
+                translatedWords.push(entry.fr.toLowerCase() + punctuation);
                 found = true;
                 break;
             }
         }
         
         if (!found) {
-            translatedWords.push(word);
+            translatedWords.push(word.toLowerCase());
         }
     }
     
-    return translatedWords.join(' ');
+    result = translatedWords.join(' ');
+    
+    // Mettre la première lettre en majuscule seulement
+    if (result.length > 0) {
+        result = result.charAt(0).toUpperCase() + result.slice(1);
+    }
+    
+    return result;
 }
 
 function initTranslator() {
@@ -171,7 +232,6 @@ function initTranslator() {
     const inputLabel = document.getElementById('input-label');
     const outputLabel = document.getElementById('output-label');
 
-    // Bouton de traduction
     translateBtn.addEventListener('click', () => {
         const text = inputText.value.trim();
         
@@ -180,12 +240,10 @@ function initTranslator() {
             return;
         }
         
-        // Désactiver le bouton et afficher l'état de chargement
         translateBtn.disabled = true;
         translateBtn.textContent = 'Traduction en cours...';
         outputText.value = 'Traduction en cours...';
         
-        // Simuler un délai pour l'UX
         setTimeout(() => {
             try {
                 const fromLang = direction === 'fr-cr' ? 'fr' : 'cr';
@@ -195,23 +253,19 @@ function initTranslator() {
                 outputText.value = 'Erreur lors de la traduction. Veuillez réessayer.';
                 console.error('Erreur:', error);
             } finally {
-                // Réactiver le bouton
                 translateBtn.disabled = false;
                 translateBtn.textContent = 'Traduire';
             }
         }, 300);
     });
 
-    // Bouton pour inverser les langues
     switchBtn.addEventListener('click', () => {
         direction = direction === 'fr-cr' ? 'cr-fr' : 'fr-cr';
         
-        // Échanger les contenus
         const temp = inputText.value;
         inputText.value = outputText.value;
         outputText.value = temp;
         
-        // Mettre à jour les labels
         if (direction === 'fr-cr') {
             inputLabel.textContent = 'Français';
             outputLabel.textContent = 'Créole Antillais';
@@ -221,7 +275,6 @@ function initTranslator() {
         }
     });
 
-    // Permettre la traduction avec la touche Entrée (Ctrl+Enter dans textarea)
     inputText.addEventListener('keydown', (e) => {
         if (e.ctrlKey && e.key === 'Enter') {
             translateBtn.click();
@@ -371,7 +424,6 @@ function initDictionarySearch() {
 // QUIZ
 // ========================================
 function initQuiz() {
-    // Mélanger et prendre 10 questions aléatoires
     currentQuizQuestions = [...allQuestions]
         .sort(() => Math.random() - 0.5)
         .slice(0, 10);
@@ -385,7 +437,6 @@ function initQuiz() {
 function renderQuiz() {
     const container = document.getElementById('quiz-container');
     
-    // Quiz terminé
     if (currentQuestion >= currentQuizQuestions.length) {
         const percentage = Math.round((quizScore / currentQuizQuestions.length) * 100);
         let message = '';
@@ -488,7 +539,6 @@ function nextQuestion() {
 function renderRiddle() {
     const container = document.getElementById('riddles-container');
     
-    // Toutes les devinettes terminées
     if (currentRiddle >= riddles.length) {
         container.innerHTML = `
             <div style="text-align: center; padding: 2rem;">
@@ -552,7 +602,6 @@ function renderRiddle() {
 function renderExercise() {
     const container = document.getElementById('exercises-container');
     
-    // Tous les exercices terminés
     if (currentExercise >= exercises.length) {
         container.innerHTML = `
             <div style="text-align: center; padding: 2rem;">
@@ -635,7 +684,6 @@ function renderOrderExercise(ex) {
     const container = document.getElementById('exercises-container');
     sentenceWords = [];
     
-    // MÉLANGER LES MOTS ALÉATOIREMENT
     const shuffledWords = [...ex.words].sort(() => Math.random() - 0.5);
     
     container.innerHTML = `
@@ -689,7 +737,6 @@ function removeWord(index) {
     const word = sentenceWords[index];
     sentenceWords.splice(index, 1);
     
-    // Réactiver le bouton correspondant
     const buttons = document.querySelectorAll('.word-button');
     buttons.forEach(btn => {
         if (btn.dataset.word === word && btn.classList.contains('used')) {
@@ -742,54 +789,40 @@ function checkSentence(correct) {
         resultDiv.innerHTML = `
             <div class="result-success">
                 Bravo ! C'est correct.
-            </div>
-            <div class="btn-group" style="margin-top: 1rem;">
-                <button class="btn btn-primary" id="next-exercise-btn">Exercice suivant</button>
-            </div>
-        `;
-        
-        document.getElementById('next-exercise-btn').addEventListener('click', () => {
-            currentExercise++;
-            renderExercise();
-        });
-    } else {
-        resultDiv.innerHTML = `
-            <div class="result-error">
-                <strong>Pas tout à fait...</strong><br>
-                <span style="color: #6b7280;">Réponse attendue :</span> <strong style="color: #2563eb;">${correct}</strong>
-            </div>
-        `;
-    }
+            </div>   <div class="btn-group" style="margin-top: 1rem;">
+            <button class="btn btn-primary" id="next-exercise-btn">Exercice suivant</button>
+        </div>
+    `;
+    
+    document.getElementById('next-exercise-btn').addEventListener('click', () => {
+        currentExercise++;
+        renderExercise();
+    });
+} else {
+    resultDiv.innerHTML = `
+        <div class="result-error">
+            <strong>Pas tout à fait...</strong><br>
+            <span style="color: #6b7280;">Réponse attendue :</span> <strong style="color: #2563eb;">${correct}</strong>
+        </div>
+    `;
 }
-
+}
 // ========================================
 // INITIALISATION GLOBALE
 // ========================================
 function init() {
-    console.log('Initialisation de l\'application créole...');
-    
-    // Initialiser les onglets
-    initTabs();
-    
-    // Initialiser le traducteur
-    initTranslator();
-    
-    // Initialiser les expressions courantes
-    initExpressions();
-    
-    // Initialiser la recherche du dictionnaire
-    initDictionarySearch();
-    
-    // Initialiser le quiz par défaut
-    initQuiz();
-    
-    console.log('Application créole initialisée avec succès !');
-    console.log(`Contenu : ${allQuestions.length} questions, ${expressions.length} expressions, ${riddles.length} devinettes, ${exercises.length} exercices, ${dictionary.length} mots au dictionnaire`);
-}
+console.log('Initialisation de l'application créole...');
+initTabs();
+initTranslator();
+initExpressions();
+initDictionarySearch();
+initQuiz();
 
-// Lancer l'initialisation quand le DOM est prêt
+console.log('Application créole initialisée avec succès !');
+console.log(`Contenu : ${allQuestions.length} questions, ${expressions.length} expressions, ${riddles.length} devinettes, ${exercises.length} exercices, ${dictionary.length} mots au dictionnaire`);
+}
 if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', init);
+document.addEventListener('DOMContentLoaded', init);
 } else {
-    init();
+init();
 }
